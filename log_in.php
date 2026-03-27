@@ -19,21 +19,37 @@ if(isset($_GET['player_id'])){
     <main>
         <?php if(isset($_GET['player_id'])): ?>
             <?php $player_id = $_GET['player_id']; ?>
-            <form method="post" action="authenticate.php?player_id=<?=$player_id?>">
-                <label for="user_name">Username: </label>
-                <input type="text" id="user_name" name="user_name">
-                <label for="password">Password: </label>
-                <input type="password" id="password" name="password">
-                <button type="submit" id="log_in" name="log_in">LogIn</button>
-            </form>
+            <div class="login_container">
+                <form method="post" action="authenticate.php?player_id=<?=$player_id?>" class="login_form">
+
+                    <h2>Login</h2>
+
+                    <label for="user_name">Username: </label>
+                    <input type="text" id="user_name" name="user_name" placeholder="Enter your username">
+
+                    <label for="password">Password: </label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
+
+                    <button type="submit" id="log_in" name="log_in">LogIn</button>
+
+                </form>
+            </div>
         <?php else: ?>
-                <form method="post" action="authenticate.php">
-                <label for="user_name">Username: </label>
-                <input type="text" id="user_name" name="user_name">
-                <label for="password">Password: </label>
-                <input type="password" id="password" name="password">
-                <button type="submit" id="log_in" name="log_in">LogIn</button>
-            </form>
+            <div class="login_container">
+                <form method="post" action="authenticate.php" class="login_form">
+
+                    <h2>Login</h2>
+
+                    <label for="user_name">Username: </label>
+                    <input type="text" id="user_name" name="user_name" placeholder="Enter your username">
+
+                    <label for="password">Password: </label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
+
+                    <button type="submit" id="log_in" name="log_in">LogIn</button>
+                    
+                </form>
+            </div>
         <?php endif ?>
     </main>
     <footer></footer>
