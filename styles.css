@@ -1,0 +1,191 @@
+/**
+ * Description: Styles Sheet for Project.
+ * Author: Sukhpreet Singh Malhi
+ * Version: 1.0
+ * Last Updated: 2026-03-22
+ */
+
+ *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+ /* JAVASCRIPT ERRORS */
+ .error_field {
+    display: none;
+    color: red;
+ }
+
+ /* HOMEPAGE */
+#header{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+
+   padding: 12px 40px;
+   background-color: #ffffff;
+
+   border-bottom: 1px solid #e5e5e5;
+   
+   position: sticky;
+   top: 0;
+   z-index: 1000;
+}
+
+#logo_div img{
+   height: 40px;
+   width: auto;
+   object-fit: contain;
+}
+
+#header_links a{
+   margin-left: 10px;
+   text-decoration: none;
+   color: #333;
+   font-weight: 500;
+
+   transition: all 0.2 ease;
+}
+
+#header_links a:hover{
+   color: #007BFF;
+}
+
+main{
+   padding: 40px;
+   max-width: 1100px;
+   margin: auto;
+}
+
+main h1{
+   font-size: 32px;
+   margin-bottom: 20px;
+   color: #222;
+}
+
+#search_form{
+   display: flex;
+   gap: 10px;
+   margin-bottom: 40px;
+}
+
+#search_form input{
+   flex: 1;
+   padding: 10px 12px;
+   border: 1px solid #ccc;
+   font-size: 14px;
+}
+
+#search_form button{
+   padding: 10px 18px;
+   border: none;
+   background-color: #007BFF;
+   color: white;
+   border-radius: 6px;
+   cursor: pointer;
+   font-size: 14px;
+   transition: background 0.2s ease;
+}
+
+
+#search_form button:hover {
+    background-color: #0056b3;
+}
+
+#website_information_div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+#website_information_div div:first-child{
+   flex: 1;
+}
+
+#website_information_div h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+#website_information_div h3{
+   margin-top: 10px;
+   font-size: 18px;
+   color: #333;
+}
+
+#website_information_div div:last-child{
+   flex: 1;
+   display: flex;
+   justify-content: center;
+}
+
+#website_information_div img{
+   max-width: 100%;
+   height: auto;
+   border-radius: 10px;
+   object-fit: cover;
+}
+
+main{
+   border: 1px solid;
+   padding: 40px;
+   max-width: 1100px;
+   margin: auto;
+}
+
+.players_table{
+   width: 100%;
+   border-collapse: collapse;
+   background-color: #ffffff;
+
+   border-radius: 10px;
+   overflow: hidden;
+
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.players_table thead{
+   background-color: #f8f9fa;
+}
+
+.players_table th{
+   text-align: left;
+   padding: 14px 16px;
+   font-size: 14px;
+   color: #333;
+   font-weight: 600;
+
+   border-bottom: 1px solid #e5e5e5;
+}
+
+.players_table td{
+   padding: 14px 16px;
+   font-size: 14px;
+   color: #555;
+
+   border-bottom: 1px solid #f0f0f0;
+}
+
+.players_table tbody tr:hover{
+   background-color: #f9fbff;
+   transition: background 0.2 ease;
+}
+
+.players_table tbody tr:nth-child(even){
+   background-color: #fcfcfc;
+}
+
+.players-table tbody tr:last-child td{
+   border-bottom: none;
+}
+
+/* FOR MEDIA QUERY */
+/* .players_table{
+   display: block;
+   overflow-x: auto; 
+   white-space: nowrap;
+} */
