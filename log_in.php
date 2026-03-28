@@ -1,5 +1,20 @@
 <?php
 
+session_start();
+
+if(isset($_SESSION['logged_in'])){
+    if(isset($_GET['player_id'])){
+        $player_id = $_GET['player_id'];
+
+        header("Location: edit_player.php?player_id=$player_id");
+        exit();
+    }
+    else{
+        header("Location: add_data.php");
+        exit();
+    }
+}
+
 require "mutual_content.php";
 
 if(isset($_GET['player_id'])){
@@ -47,7 +62,7 @@ if(isset($_GET['player_id'])){
                     <input type="password" id="password" name="password" placeholder="Enter your password">
 
                     <button type="submit" id="log_in" name="log_in">LogIn</button>
-                    
+
                 </form>
             </div>
         <?php endif ?>

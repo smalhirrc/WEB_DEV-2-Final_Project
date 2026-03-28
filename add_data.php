@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require("mutual_content.php");
 
