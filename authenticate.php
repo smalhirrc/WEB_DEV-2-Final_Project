@@ -36,11 +36,17 @@ $admin = $statement_admin_query->fetch(PDO::FETCH_ASSOC);
 // If user exists and password matches
 if ($admin && $admin['passwords'] === $validated_password) {
     if(isset($_GET['player_id'])){
+        session_start();
+        $_SESSION['logged_in'] = true;
+
         $player_id = $_GET['player_id'];
         header("Location: edit_player.php?player_id=$player_id");
         exit();
     }
     else{
+        session_start();
+        $_SESSION['logged_in'] = true;
+        
         header("Location: add_data.php");
         exit();
     }
