@@ -30,16 +30,18 @@ catch(PDOException $e){
 </head>
 <body>
     <main>
-        <?php foreach($rows as $player): ?>
-            <div id="player_container">
-                <div id="player_image_container">
-                    <img src="images/<?=$player['player_name']?>.jpeg" alt="players image">
+        <div id="player_list">
+            <?php foreach($rows as $player): ?>
+                <div class="player_row">
+                    <div class="player_image">
+                        <img src="images/football.jpeg" alt="players image">
+                    </div>
+                    <p>
+                        <a href="player_page.php?player_id=<?=$player['player_id']?>"><?=$player['player_name']?></a>
+                    </p>
                 </div>
-                <p>
-                    <a href="player_page.php?player_id=<?=$player['player_id']?>"><?=$player['player_name']?></a>
-                </p>
-            </div>
-        <?php endforeach ?>
+            <?php endforeach ?>
+        </div>
     </main>
 </body>
 </html>
