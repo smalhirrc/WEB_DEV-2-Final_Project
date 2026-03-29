@@ -15,17 +15,18 @@ function validate(e)
                   valid_player_weight(),
                   valid_player_playing_position(),
                   valid_player_jersey_number(),
-                  valid_player_profile_description(),
-                  valid_team_name(),
-                  valid_team_coach_name(),
-                  valid_team_home_ground(),
-                  valid_team_founded_in_year(),
-                  valid_team_category() ,
-                  valid_number_of_matches_played(),
-                  valid_total_goals(),
-                  valid_total_assists(),
-                  valid_yellow_cards(),
-                  valid_red_cards()];
+                  valid_player_profile_description()];
+    // ,
+    //               valid_team_name(),
+    //               valid_team_coach_name(),
+    //               valid_team_home_ground(),
+    //               valid_team_founded_in_year(),
+    //               valid_team_category() ,
+    //               valid_number_of_matches_played(),
+    //               valid_total_goals(),
+    //               valid_total_assists(),
+    //               valid_yellow_cards(),
+    //               valid_red_cards()
 
     let form_valid_flag = !checks.includes(false);
 

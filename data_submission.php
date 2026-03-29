@@ -5,32 +5,6 @@ error_reporting(E_ALL);
 require 'connect.php';
 require "mutual_content.php";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // SANITIZATION FUNCTIONS
 // SANITIZE STRINGS
 function sanitize_string($key)
@@ -60,34 +34,6 @@ function sanitize_float($key)
 
     return $sanitized_float;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // VALIDATE SANITIZED INPUTS
 // PLAYER NAME
@@ -331,104 +277,79 @@ function validate_red_cards($input)
 
 $validated_red_cards = validate_red_cards($sanitized_red_cards);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // PREPARE QUERY TO GET CATEGORY_ID FROM CATEGORIES 
-$category_id_query = "SELECT category_id FROM Categories WHERE category_type = :team_category";
+// $category_id_query = "SELECT category_id FROM Categories WHERE category_type = :team_category";
 
-$statement_category_id = $db->prepare($category_id_query);
+// $statement_category_id = $db->prepare($category_id_query);
 
 // PREPARE QUERY TO INSERT TEAM
-$team_query = "INSERT INTO Teams (team_name, team_coach_name, team_home_ground, team_founded_in_year, category_id)
-                           VALUES (:team_name, :team_coach_name, :team_home_ground, :team_founded_in_year, :category_id)";
+// $team_query = "INSERT INTO Teams (team_name, team_coach_name, team_home_ground, team_founded_in_year, category_id)
+//                            VALUES (:team_name, :team_coach_name, :team_home_ground, :team_founded_in_year, :category_id)";
 
-$statement_team_query = $db->prepare($team_query);
+// $statement_team_query = $db->prepare($team_query);
 
 // PREPARE QUERY TO INSERT PLAYER
-$players_query = "INSERT INTO Players (player_name, team_id, player_age, player_height, player_weight, player_playing_position, player_jersey_number, category_id, player_profile_description) 
-                        VALUES        (:player_name, :team_id, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :category_id, :player_profile_description)";
+$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description) 
+                        VALUES        (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description)";
 
 $statement_player_query = $db->prepare($players_query);
 
 // PREPARE QUERY TO INSERT PLAYER SATISTICS
-$player_satistics_query = "INSERT INTO Player_satistics (player_id, number_of_matches_played, total_goals, total_assists, yellow_cards, red_cards)
-                                                  VALUES (:player_id, :number_of_matches_played, :total_goals, :total_assists, :yellow_cards, :red_cards)";
+// $player_satistics_query = "INSERT INTO Player_satistics (player_id, number_of_matches_played, total_goals, total_assists, yellow_cards, red_cards)
+//                                                   VALUES (:player_id, :number_of_matches_played, :total_goals, :total_assists, :yellow_cards, :red_cards)";
 
-$statement_player_satistics_query = $db->prepare($player_satistics_query);
-
-
-
-
-
+// $statement_player_satistics_query = $db->prepare($player_satistics_query);
 
 try{
     $db->beginTransaction();
 
     // CATEGORIES
-    $statement_category_id->bindValue(":team_category", $team_category);
+    // $statement_category_id->bindValue(":team_category", $team_category);
 
-    $statement_category_id->execute();
+    // $statement_category_id->execute();
 
-    $validated_team_category_id = $statement_category_id->fetch(PDO::FETCH_ASSOC);
-    $category_id = isset($validated_team_category_id['category_id']) ? $validated_team_category_id['category_id'] : null;
+    // $validated_team_category_id = $statement_category_id->fetch(PDO::FETCH_ASSOC);
+    // $category_id = isset($validated_team_category_id['category_id']) ? $validated_team_category_id['category_id'] : null;
 
     // TEAMS 
-    $statement_team_query->bindValue(":team_name", $validated_team_name);
-    $statement_team_query->bindValue(":team_coach_name", $validated_team_coach_name);
-    $statement_team_query->bindValue(":team_home_ground", $validated_team_home_ground);
-    $statement_team_query->bindValue(":team_founded_in_year", $validated_team_founded_in_year);
-    $statement_team_query->bindValue(':category_id', $category_id);
+    // $statement_team_query->bindValue(":team_name", $validated_team_name);
+    // $statement_team_query->bindValue(":team_coach_name", $validated_team_coach_name);
+    // $statement_team_query->bindValue(":team_home_ground", $validated_team_home_ground);
+    // $statement_team_query->bindValue(":team_founded_in_year", $validated_team_founded_in_year);
+    // $statement_team_query->bindValue(':category_id', $category_id);
 
-    $statement_team_query->execute();
+    // $statement_team_query->execute();
 
-    $team_id = $db->lastInsertId();
+    // $team_id = $db->lastInsertId();
 
     // PLAYERS 
     $statement_player_query->bindValue(':player_name', $validated_player_name);
-    $statement_player_query->bindValue(':team_id', $team_id);
+    // $statement_player_query->bindValue(':team_id', $team_id);
     $statement_player_query->bindValue(':player_age', $validated_player_age);
     $statement_player_query->bindValue(':player_height', $validated_player_height);
     $statement_player_query->bindValue(':player_weight', $validated_player_weight);
     $statement_player_query->bindValue(':player_playing_position', $validated_player_playing_position);
     $statement_player_query->bindValue(':player_jersey_number', $validated_player_jersey_number);
-    $statement_player_query->bindValue(':category_id', $category_id);
+    // $statement_player_query->bindValue(':category_id', $category_id);
     $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
 
     $statement_player_query->execute();
 
-    $player_id = $db->lastInsertId();
+    // $player_id = $db->lastInsertId();
 
     // PLAYER_SATISTICS
-    $statement_player_satistics_query->bindValue(':player_id', $player_id);
-    $statement_player_satistics_query->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
-    $statement_player_satistics_query->bindValue(":total_goals", $validated_total_goals);
-    $statement_player_satistics_query->bindValue(":total_assists", $validated_total_assists);
-    $statement_player_satistics_query->bindValue(":yellow_cards", $validated_yellow_cards);
-    $statement_player_satistics_query->bindValue(":red_cards", $validated_red_cards);
+    // $statement_player_satistics_query->bindValue(':player_id', $player_id);
+    // $statement_player_satistics_query->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
+    // $statement_player_satistics_query->bindValue(":total_goals", $validated_total_goals);
+    // $statement_player_satistics_query->bindValue(":total_assists", $validated_total_assists);
+    // $statement_player_satistics_query->bindValue(":yellow_cards", $validated_yellow_cards);
+    // $statement_player_satistics_query->bindValue(":red_cards", $validated_red_cards);
 
-    $statement_player_satistics_query->execute();
+    // $statement_player_satistics_query->execute();
 
     $db->commit();
 
-    echo "Successfully saved Team, Player, and Stats!";
+    echo "Successfully saved Player!";
 
     header("Location: success.php?status=added");
     exit();

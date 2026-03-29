@@ -12,22 +12,8 @@ $player_page_query = "SELECT p.player_id,
                              p.player_weight, 
                              p.player_playing_position, 
                              p.player_jersey_number, 
-                             p.player_profile_description,
-                             t.team_name, 
-                             t.team_coach_name, 
-                             t.team_home_ground, 
-                             t.team_founded_in_year, 
-                             s.number_of_matches_played, 
-                             s.total_goals, 
-                             s.total_assists, 
-                             s.yellow_cards, 
-                             s.red_cards, 
-                             c.category_id, 
-                             c.category_name 
+                             p.player_profile_description
                       FROM Players p
-                      JOIN Teams t ON p.team_id = t.team_id
-                      JOIN Player_satistics s ON p.player_id = s.player_id
-                      JOIN Categories c ON p.category_id = c.category_id
                       WHERE p.player_id = $page_player_id";
 
 $statement_player_page_query = $db->prepare($player_page_query);
@@ -91,92 +77,6 @@ catch(PDOException $e){
                             <label for="player_profile_description">Player Description: </label>
                             <input id="player_profile_description" name="player_profile_description" value="<?=$player['player_profile_description']?>">
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
-                        </li>
-                    </ul>
-                </fieldset>
-                <fieldset>
-                    <legend>Player's Team Information</legend>
-                    <ul>
-                        <li>
-                            <label for="team_name">Team Name: </label>
-                            <input type="text" id="team_name" name="team_name" value="<?=$player['team_name']?>">
-                            <span id="team_name_error" class="error_field">* Team's Name is required.</span>
-                        </li>
-                        <li>
-                            <label for="team_coach_name">Team Coach Name: </label>
-                            <input type="text" id="team_coach_name" name="team_coach_name" value="<?=$player['team_coach_name']?>">
-                            <span id="team_coach_name_error" class="error_field">* Team's coach name is required.</span>
-                        </li>
-                        <li>
-                            <label for="team_home_ground">Team Home Ground: </label>
-                            <input type="text" id="team_home_ground" name="team_home_ground" value="<?=$player['team_home_ground']?>">
-                            <span id="team_home_ground_error" class="error_field">* Team's home ground is required.</span>
-                        </li>
-                        <li>
-                            <label for="team_founded_in_year">Team Founded in (year): </label>
-                            <input type="number" id="team_founded_in_year" name="team_founded_in_year" min="1900" max="2099" value="<?=$player['team_founded_in_year']?>">
-                            <span id="team_founded_in_year_error" class="error_field">* Team founded in which year is required.</span>
-                        </li>
-                        <li>
-                            <label>Team Category: </label>
-                            <?php if($player['category_name'] === "Under_17"): ?>
-                            <input type="radio" id="team_category_under_17" class="team_category" name="team_category" value="Under_17" checked>
-                            <label for="team_category_under_17">Under 17</label>
-                            <input type="radio" id="team_category_under_19" class="team_category" name="team_category" value="Under_19">
-                            <label for="team_category_under_19">Under 19</label>
-                            <input type="radio" id="team_category_senior" class="team_category" name="team_category" value="Under_21">
-                            <label for="team_category_senior">Senior</label>
-                            <?php endif ?>
-
-                            <?php if($player['category_name'] === "Under_19"): ?>
-                            <input type="radio" id="team_category_under_17" class="team_category" name="team_category" value="Under_17">
-                            <label for="team_category_under_17">Under 17</label>
-                            <input type="radio" id="team_category_under_19" class="team_category" name="team_category" value="Under_19" checked>
-                            <label for="team_category_under_19">Under 19</label>
-                            <input type="radio" id="team_category_senior" class="team_category" name="team_category" value="Under_21">
-                            <label for="team_category_senior">Senior</label>
-                            <?php endif ?>
-
-                            <?php if($player['category_name'] === "Under_21"): ?>
-                            <input type="radio" id="team_category_under_17" class="team_category" name="team_category" value="Under_17">
-                            <label for="team_category_under_17">Under 17</label>
-                            <input type="radio" id="team_category_under_19" class="team_category" name="team_category" value="Under_19">
-                            <label for="team_category_under_19">Under 19</label>
-                            <input type="radio" id="team_category_senior" class="team_category" name="team_category" value="Under_21" checked>
-                            <label for="team_category_senior">Senior</label>
-                            <?php endif ?> 
-
-                            <span id="team_category_error" class="error_field">* Team's category is required.</span>
-                        </li>
-                    </ul>
-                </fieldset>
-                <fieldset>
-                    <legend>Player's Satistics</legend>
-                    <ul>
-                        <li>
-                            <label for="number_of_matches_played">Matches Played: </label>
-                            <input type="number" id="number_of_matches_played" name="number_of_matches_played" value="<?=$player['number_of_matches_played']?>">
-                            <span id="number_of_matches_played_error" class="error_field">* Number of matches played is required.</span>
-                        </li>
-                        <li>
-                            <label for="total_goals">Total Goals Scored: </label>
-                            <input type="number" id="total_goals" name="total_goals" value="<?=$player['total_goals']?>">
-                            <span id="total_goals_error" class="error_field">* Number of total goals is required.</span>
-                        </li>
-                        <li>
-                            <label for="total_assists">Total Assists: </label>
-                            <input type="number" id="total_assists" name="total_assists" value="<?=$player['total_assists']?>">
-                            <span id="total_assists_error" class="error_field">* Number of total assists is required.</span>
-                        </li>
-                        <li>
-                            <label for="yellow_cards">Yellow Cards: </label>
-                            <input type="number" id="yellow_cards" name="yellow_cards" value="<?=$player['yellow_cards']?>">
-                            <span id="yellow_cards_error" class="error_field">* Number of yellow cards is required.</span>
-                        </li>
-                        <li>
-                            <label for="red_cards">Red Cards: </label>
-                            <input type="number" id="red_cards" name="red_cards" value="<?=$player['red_cards']?>">
-                            <span id="red_cards_error" class="error_field">* Number of red cards is required.</span>
                         </li>
                     </ul>
                 </fieldset>

@@ -57,7 +57,7 @@ require("mutual_content.php");
                     </li>
                 </ul>
             </fieldset>
-            <fieldset>
+            <!-- <fieldset>
                 <legend>Player's Team Information</legend>
                 <ul>
                     <li>
@@ -121,7 +121,7 @@ require("mutual_content.php");
                         <span id="red_cards_error" class="error_field">* Number of red cards is required.</span>
                     </li>
                 </ul>
-            </fieldset>
+            </fieldset> -->
             <button type="submit" id="submit" name="submit">Submit</button>
             <button type="reset" id="reset" name="reset">Reset</button>
         </form>

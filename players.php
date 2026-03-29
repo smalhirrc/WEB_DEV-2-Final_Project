@@ -7,9 +7,8 @@ if(isset($_GET['message']) && $_GET['message'] === "deleted"){
     echo "Player deleted successfully";
 }
 
-$players_query = "SELECT p.player_id, p.player_name, t.team_name 
-                  FROM Players p 
-                  JOIN Teams t ON p.team_id = t.team_id";
+$players_query = "SELECT p.player_id, p.player_name, p.player_profile_description 
+                  FROM Players p";
 
 $statement = $db->prepare($players_query);
 
@@ -31,22 +30,16 @@ catch(PDOException $e){
 </head>
 <body>
     <main>
-        <table class="players_table">
-            <thead>
-                <tr>
-                    <th>Player Name</th>
-                    <th>Player Team</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($rows as $player): ?>
-                <tr>
-                    <td><a href="player_page.php?player_id=<?=$player['player_id']?>" class="player_page"><?=$player['player_name']?></td>
-                    <td><?= $player['team_name'] ?></td>
-                </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
+        <?php foreach($rows as $player): ?>
+            <div id="player_container">
+                <div id="player_image_container">
+                    <img src="images/<?=$player['player_name']?>.jpeg" alt="players image">
+                </div>
+                <p>
+                    <a href="player_page.php?player_id=<?=$player['player_id']?>"><?=$player['player_name']?></a>
+                </p>
+            </div>
+        <?php endforeach ?>
     </main>
 </body>
 </html>

@@ -305,15 +305,15 @@ $update_table_players_query = "UPDATE Players
                                WHERE player_id = :player_id";
 $statement_player_update = $db->prepare($update_table_players_query);
 
-$update_table_satistics_query = "UPDATE Player_satistics
-                                 SET number_of_matches_played = :number_of_matches_played,
-                                     total_goals = :total_goals,
-                                     total_assists = :total_assists,
-                                     yellow_cards = :yellow_cards,
-                                     red_cards = :red_cards
-                                WHERE player_id = :player_id";
+// $update_table_satistics_query = "UPDATE Player_satistics
+//                                  SET number_of_matches_played = :number_of_matches_played,
+//                                      total_goals = :total_goals,
+//                                      total_assists = :total_assists,
+//                                      yellow_cards = :yellow_cards,
+//                                      red_cards = :red_cards
+//                                 WHERE player_id = :player_id";
                         
-$statement_satistics_update = $db->prepare($update_table_satistics_query);
+// $statement_satistics_update = $db->prepare($update_table_satistics_query);
 
 try{
     $db->beginTransaction();
@@ -328,13 +328,13 @@ try{
     $statement_player_update->bindValue(":player_id", $player_id);
     $statement_player_update->execute();
 
-    $statement_satistics_update->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
-    $statement_satistics_update->bindValue(":total_goals", $validated_total_goals);
-    $statement_satistics_update->bindValue(":total_assists", $validated_total_assists);
-    $statement_satistics_update->bindValue(":yellow_cards", $validated_yellow_cards);
-    $statement_satistics_update->bindValue(":red_cards", $validated_red_cards);
-    $statement_satistics_update->bindValue(":player_id", $player_id);
-    $statement_satistics_update->execute();
+    // $statement_satistics_update->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
+    // $statement_satistics_update->bindValue(":total_goals", $validated_total_goals);
+    // $statement_satistics_update->bindValue(":total_assists", $validated_total_assists);
+    // $statement_satistics_update->bindValue(":yellow_cards", $validated_yellow_cards);
+    // $statement_satistics_update->bindValue(":red_cards", $validated_red_cards);
+    // $statement_satistics_update->bindValue(":player_id", $player_id);
+    // $statement_satistics_update->execute();
 
     $db->commit();
 
