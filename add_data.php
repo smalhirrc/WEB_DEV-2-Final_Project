@@ -16,7 +16,7 @@ require("mutual_content.php");
 <body>
     <div id="data_form_container">
         <h1>Add Player</h1>
-        <form id="player_data_form" method="post" action="data_submission.php">
+        <form id="player_data_form" method="post" action="data_submission.php" enctype="multipart/form-data">
             <fieldset>
                 <legend>Player's Information</legend>
                 <ul>

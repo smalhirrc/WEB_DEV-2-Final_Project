@@ -85,7 +85,7 @@ catch(PDOException $e){
             </form>
         <?php endforeach ?>
     </div>
-    <div>
+    <div id="edit_player_delete">
         <a href="delete.php?player_id=<?=$page_player_id?>" onClick="return confirm('Are you sure you want to delete the Player?');">Delete Player</a>
     </div>
 </body>

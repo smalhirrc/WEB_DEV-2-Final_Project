@@ -35,20 +35,10 @@ $statement_player_page_query = $db->prepare($player_page_query);
 try{
     $statement_player_page_query->execute();
     $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach($rows as $player){
-        echo $player['player_name'] . " (" . $player['player_playing_position'] . ") is ";
-
-        echo "He is " . $player['player_age'] . " years old, "
-        . $player['player_height'] . " cm tall, and weighs "
-        . $player['player_weight'] . " kg. <br>";
-    }
 }
 catch(PDOException $e){
     echo "Error is: " . $e->getMessage();
 }
-
-echo "<a href='players.php'>BackToPlayers</a><br>";
 
 ?>
 <!DOCTYPE html>
@@ -59,8 +49,28 @@ echo "<a href='players.php'>BackToPlayers</a><br>";
     <title><?=$player['player_name']?>'s Page</title>
 </head>
 <body>
-    <div>
-        <a href="log_in.php?player_id=<?=$page_player_id?>">Edit Player</a>
+    <div id="page_link_back_to_players">
+        <a href='players.php'>BackToPlayers</a>
+    </div>
+    <div id="player_profile">
+        <div id="player_card">
+            <div id="player_image">
+                <img src="images/football.jpeg" alt="image of football">
+            </div>
+            <div id="player_info">
+            <?php foreach($rows as $player): ?>
+                <p>
+                    <?= $player['player_name'] . " (" . $player['player_playing_position'] . ") is " .
+                    "He is " . $player['player_age'] . " years old, " .
+                    $player['player_height'] . " cm tall, and weighs " .
+                    $player['player_weight'] . " kg."; ?>
+                </p>
+            <?php endforeach ?>
+            </div>
+        </div>
+        <div id="page_link_edit_player">
+            <a href="log_in.php?player_id=<?=$page_player_id?>">Edit Player</a>
+        </div>
     </div>
 </body>
 </html>
