@@ -404,6 +404,7 @@ main h1{
    background: #6a0505;
 }
 
+/* ADD / EDIT PLAYER */
 #data_form_container{
    max-width: 700px;
    margin: 40px auto;
@@ -458,6 +459,7 @@ legend{
    border: 1px solid #ccc;
    border-radius: 6px;
    font-size: 14px;
+   min-width: 100%;
 
    transition: border 0.2s ease;
 }

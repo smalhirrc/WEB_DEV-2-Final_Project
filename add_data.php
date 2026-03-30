@@ -55,6 +55,10 @@ require("mutual_content.php");
                         <input id="player_profile_description" name="player_profile_description"/>
                         <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
                     </li>
+                    <li>
+                        <label for="player_image">Upload Player Image (optional): </label>
+                        <input type="file" name="player_image" id="player_image">
+                    </li>
                 </ul>
             </fieldset>
             <!-- <fieldset>

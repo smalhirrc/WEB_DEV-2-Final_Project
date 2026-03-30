@@ -277,6 +277,41 @@ function validate_red_cards($input)
 
 $validated_red_cards = validate_red_cards($sanitized_red_cards);
 
+// PLAYER IMAGE FILE UPLOAD CHECKING
+function file_upload_path($original_filename, $upload_subfolder_name = 'images')
+{
+    $current_folder = dirname(__FILE__);
+
+    $path_segments = [$current_folder, $upload_subfolder_name, basename($original_filename)];
+
+    return join(DIRECTORY_SEPARATOR, $path_segments);
+}
+
+function file_is_an_image($temporary_path, $new_path){
+    $image_mime_type = getimagesize($temporary_path)['mime'];
+    $image_extension = pathinfo($new_path, PATHINFO_EXTENSION);
+
+    $allowed_mime_types = ['image/jpeg', 'image/png'];
+    $allowed_extensions = ['jpeg', 'jpg', 'png'];
+
+    $mime_type_is_valid = in_array($image_mime_type, $allowed_mime_types);
+    $file_extension_is_valid = in_array($image_extension, $allowed_extensions);
+
+    return $mime_type_is_valid && $file_extension_is_valid;
+}
+
+if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
+    $image_filename = $_FILES['player_image']['name'];
+
+    $new_image_path = file_upload_path($image_filename);
+
+    $temporary_image_path = $_FILES['player_image']['tmp_name'];
+
+    if(file_is_an_image($temporary_image_path, $new_image_path)){
+        move_uploaded_file($temporary_image_path, $new_image_path);
+    }
+}
+
 // PREPARE QUERY TO GET CATEGORY_ID FROM CATEGORIES 
 // $category_id_query = "SELECT category_id FROM Categories WHERE category_type = :team_category";
 
@@ -351,7 +386,7 @@ try{
 
     echo "Successfully saved Player!";
 
-    header("Location: success.php?status=added");
+    header("Location: success.php?status=added&image=$new_image_path");
     exit();
 }
 catch (PDOException $e) {
