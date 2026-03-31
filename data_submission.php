@@ -308,6 +308,8 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
     $temporary_image_path = $_FILES['player_image']['tmp_name'];
 
     if(file_is_an_image($temporary_image_path, $new_image_path)){
+        $image_name = $_FILES['player_image']['name'];
+
         move_uploaded_file($temporary_image_path, $new_image_path);
     }
 }
@@ -334,6 +336,11 @@ $statement_player_query = $db->prepare($players_query);
 //                                                   VALUES (:player_id, :number_of_matches_played, :total_goals, :total_assists, :yellow_cards, :red_cards)";
 
 // $statement_player_satistics_query = $db->prepare($player_satistics_query);
+
+// PLAYER IMAGE
+$player_image_query = "INSERT INTO Images (player_id, image_name) VALUES (:player_id, :image_name)";
+
+$statement_player_image_query = $db->prepare($player_image_query);
 
 try{
     $db->beginTransaction();
@@ -370,7 +377,7 @@ try{
 
     $statement_player_query->execute();
 
-    // $player_id = $db->lastInsertId();
+    $player_id = $db->lastInsertId();
 
     // PLAYER_SATISTICS
     // $statement_player_satistics_query->bindValue(':player_id', $player_id);
@@ -381,6 +388,12 @@ try{
     // $statement_player_satistics_query->bindValue(":red_cards", $validated_red_cards);
 
     // $statement_player_satistics_query->execute();
+    if(isset($image_name)){
+        $statement_player_image_query->bindValue(":player_id", $player_id);
+        $statement_player_image_query->bindValue(":image_name", $image_name);
+
+        $statement_player_image_query->execute();
+    }
 
     $db->commit();
 

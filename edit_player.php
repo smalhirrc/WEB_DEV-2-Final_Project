@@ -14,12 +14,30 @@ $player_page_query = "SELECT p.player_id,
                              p.player_jersey_number, 
                              p.player_profile_description
                       FROM Players p
-                      WHERE p.player_id = $page_player_id";
+                      WHERE p.player_id = :player_id";
 
 $statement_player_page_query = $db->prepare($player_page_query);
+
+$player_current_image_query = "SELECT image_name 
+                               FROM Images 
+                               WHERE player_id = :player_id";
+
+$statement_player_current_image_query = $db->prepare($player_current_image_query);
+
 try{
+    $db->beginTransaction();
+
+    $statement_player_page_query->bindValue(":player_id", $page_player_id);
     $statement_player_page_query->execute();
+
     $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
+
+    $statement_player_current_image_query->bindValue(":player_id", $page_player_id);
+    $statement_player_current_image_query->execute();
+
+    $image_rows = $statement_player_current_image_query->fetch(PDO::FETCH_ASSOC);
+
+    $db->commit();
 }
 catch(PDOException $e){
     echo "Error in showing values: " . $e->getMessage();
@@ -39,7 +57,7 @@ catch(PDOException $e){
 <div id="data_form_container">
         <h1>Update Player</h1>
         <?php foreach($rows as $player): ?>
-            <form id="player_data_form" method="post" action="update_data_submission.php?player_id=<?=$player['player_id']?>">
+            <form id="player_data_form" method="post" enctype="multipart/form-data" action="update_data_submission.php?player_id=<?=$player['player_id']?>">
                 <fieldset>
                     <legend><?=$player['player_name'] . "'s"?> Information</legend>
                     <ul>
@@ -78,6 +96,11 @@ catch(PDOException $e){
                             <input id="player_profile_description" name="player_profile_description" value="<?=$player['player_profile_description']?>">
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
                         </li>
+                        <li>
+                            <label for="player_image">Upload Player Image (optional): </label>
+                            <input type="file" name="player_image" id="player_image">
+                        </li>
+                        <p>Current file name: <?=$image_rows['image_name']?></p>
                     </ul>
                 </fieldset>
                 <button type="submit" id="submit" name="submit">Update Player</button>
