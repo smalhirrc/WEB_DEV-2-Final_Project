@@ -100,7 +100,7 @@ catch(PDOException $e){
                             <label for="player_image">Upload Player Image (optional): </label>
                             <input type="file" name="player_image" id="player_image">
                         </li>
-                        <p>Current file name: <?=$image_rows['image_name']?></p>
+                        <p id="edit_page_current_image">Current file: <img src="images/<?=$image_rows['image_name']?>" alt="players image"></p>
                     </ul>
                 </fieldset>
                 <button type="submit" id="submit" name="submit">Update Player</button>

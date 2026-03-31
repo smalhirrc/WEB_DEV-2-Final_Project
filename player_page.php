@@ -12,7 +12,7 @@ $player_page_query = "SELECT p.player_name,
                              p.player_playing_position, 
                              p.player_jersey_number 
                       FROM Players p
-                      WHERE p.player_id = $page_player_id";
+                      WHERE p.player_id = :player_id";
 
                     //         --  t.team_name, 
                     //         --  t.team_coach_name, 
@@ -32,9 +32,22 @@ $player_page_query = "SELECT p.player_name,
 
 $statement_player_page_query = $db->prepare($player_page_query);
 
+$player_current_image_query = "SELECT image_name 
+                               FROM Images 
+                               WHERE player_id = :player_id";
+
+$statement_player_current_image_query = $db->prepare($player_current_image_query);
+
 try{
+    $statement_player_page_query->bindValue(":player_id", $page_player_id);
     $statement_player_page_query->execute();
+
     $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
+
+    $statement_player_current_image_query->bindValue(":player_id", $page_player_id);
+    $statement_player_current_image_query->execute();
+
+    $image_rows = $statement_player_current_image_query->fetch(PDO::FETCH_ASSOC);
 }
 catch(PDOException $e){
     echo "Error is: " . $e->getMessage();
@@ -55,7 +68,7 @@ catch(PDOException $e){
     <div id="player_profile">
         <div id="player_card">
             <div id="player_image">
-                <img src="images/football.jpeg" alt="image of football">
+                <img src="images/<?=$image_rows['image_name']?>" alt="image of football">
             </div>
             <div id="player_info">
             <?php foreach($rows as $player): ?>
