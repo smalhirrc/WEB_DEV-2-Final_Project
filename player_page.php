@@ -62,7 +62,7 @@ catch(PDOException $e){
     <title><?=$player['player_name']?>'s Page</title>
 </head>
 <body>
-    <div id="page_link_back_to_players">
+    <div id="back_to_players_link">
         <a href='players.php'>BackToPlayers</a>
     </div>
     <div id="player_profile">
@@ -81,7 +81,7 @@ catch(PDOException $e){
             <?php endforeach ?>
             </div>
         </div>
-        <div id="page_link_edit_player">
+        <div id="edit_player_link">
             <a href="log_in.php?player_id=<?=$page_player_id?>">Edit Player</a>
         </div>
     </div>

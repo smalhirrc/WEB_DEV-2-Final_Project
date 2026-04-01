@@ -56,11 +56,25 @@ function load()
 
     let player_data_form_reset_button = document.getElementById("reset");
     player_data_form_reset_button.addEventListener("click", reset_all);
+
+    // function will run
 }
 
+// function will make previous image display none
+// new image display block - src of new display is selected file
 
+function show(input){
+    let current_image_preview = document.getElementById("current_image_preview");
+    let new_image_preview = document.getElementById("new_image_preview");
 
+    let file = input.files[0];
 
+    const render = URL.createObjectURL(file);
+
+    new_image_preview.src = render;
+    new_image_preview.style.display = "block";
+    current_image_preview.style.display = "none";
+}
 
 
 

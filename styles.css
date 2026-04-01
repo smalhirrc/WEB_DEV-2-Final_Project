@@ -12,12 +12,6 @@
     font-family: "Roboto", sans-serif;
 }
 
- /* JAVASCRIPT ERRORS */
- .error_field {
-    display: none;
-    color: red;
- }
-
  /* HEADER */
 #header{
    display: flex;
@@ -55,19 +49,19 @@
 
 /* MAIN */
 main{
-   border: 1px solid;
+   /* border: 1px solid; */
    padding: 40px;
    max-width: 1100px;
    margin: auto;
 }
 
-/* HOMEPAGE MAIN */
 main h1{
    font-size: 32px;
    margin-bottom: 20px;
    color: #222;
 }
 
+/* HOMEPAGE SEARCH FORM */
 #search_form{
    display: flex;
    gap: 10px;
@@ -92,11 +86,11 @@ main h1{
    transition: background 0.2s ease;
 }
 
-
 #search_form button:hover {
     background-color: #0056b3;
 }
 
+/* HOMEPAGE WEBSITE INFO */
 #website_information_div {
     display: flex;
     align-items: center;
@@ -206,7 +200,7 @@ main h1{
 }
 
 .login_form h2{
-   font-size: h2;
+   font-size: 24px;
    color: #444;
 }
 
@@ -240,7 +234,7 @@ main h1{
    transform: scale(0.98);
 }
 
-/* PLAYERS LIST PAGE */
+/* ALL PLAYERS LIST PAGE */
 #player_list{
    max-width: 900px;
    margin: auto;
@@ -302,7 +296,7 @@ main h1{
    color: #007bff;
 }
 
-/* PLAYER PAGE */
+/* SPECIFIC PLAYER PAGE */
 #player_profile{
    max-width: 900px;
    margin: 40px auto;
@@ -343,30 +337,11 @@ main h1{
    margin: 0;
 }
 
-#edit_player{
+#edit_player_link{
    margin-top: 20px;
 }
 
-#page_link_back_to_players a{
-   display: inline-block;
-
-   padding: 10px 18px;
-   background: #000000;
-   color: white;
-
-   text-decoration: none;
-   border-radius: 6px;
-   font-size: 14px;
-   font-weight: 500;
-
-   transition: background 0.2s ease;
-}
-
-#page_link_back_to_players a:hover{
-   background: #0056b3;
-}
-
-#page_link_edit_player a{
+#edit_player_link a{
    display: inline-block;
 
    padding: 10px 18px;
@@ -381,11 +356,32 @@ main h1{
    transition: background 0.2s ease;
 }
 
-#page_link_edit_player a:hover{
+#edit_player_link a:hover{
    background: #0056b3;
 }
 
-#edit_player_delete a{
+
+#back_to_players_link a{
+   display: inline-block;
+
+   padding: 10px 18px;
+   background: #000000;
+   color: white;
+
+   text-decoration: none;
+   border-radius: 6px;
+   font-size: 14px;
+   font-weight: 500;
+
+   transition: background 0.2s ease;
+}
+
+#back_to_players_link a:hover{
+   background: #0056b3;
+}
+
+/* EDIT PLAYER PAGE */
+#delete_player_link a{
    display: inline-block;
 
    padding: 10px 18px;
@@ -400,11 +396,18 @@ main h1{
    transition: background 0.2s ease;
 }
 
-#edit_player_delete a:hover{
+#delete_player_link a:hover{
    background: #6a0505;
 }
 
-/* ADD / EDIT PLAYER */
+/* ADD and EDIT PLAYER FORM */
+.error_field{
+    font-size: 12px;
+    color: #d93025;
+    margin-top: 3px;
+    display: none;
+}
+
 #data_form_container{
    max-width: 700px;
    margin: 40px auto;
@@ -454,6 +457,19 @@ legend{
    margin-bottom: 16px;
 }
 
+#add_image_label{
+   width: 145px;
+   height: 40px;
+   border-radius: 6px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: #107a02;
+   color: white;
+   cursor: pointer;
+   transition: background 0.2s ease;
+}
+
 #player_data_form input{
    padding: 9px 11px;
    border: 1px solid #ccc;
@@ -469,28 +485,52 @@ legend{
    border-color: #007bff;
 }
 
-.error_field{
-    font-size: 12px;
-    color: #d93025;
-    margin-top: 3px;
+#add_image_label:hover{
+   background: #0c6401;
+}
+
+#player_data_form input:last-child{
+   display: none;
+}
+
+#remove_image_link a{
+   border: none;
+   display: inline-block;
+   padding: 10px 18px;
+   text-decoration: none;
+   background: #f1f1f1;
+   color: rgb(83, 80, 80); 
+   border-radius: 6px;
+   font-size: 14px;
+   font-weight: 500;
+   transition: background 0.2s ease;
+}
+
+#remove_image_link a:hover{
+   background: #e2e2e2;
 }
 
 #player_data_form button{
     margin-top: 10px;
 }
 
-#edit_page_current_image{
+/* CURRENT IMAGE DISPLAY ON EDIT PLAYER PAGE */
+#current_image_preview{
    width: 180px;
    height: 180px;
 
    overflow: hidden;
 }
 
-#edit_page_current_image img{
+#current_image_preview img{
    width: 100%;
    height: 100%;
 
    object-fit: cover;
+}
+
+#new_image_preview{
+   display: none;
 }
 
 #submit{

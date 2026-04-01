@@ -97,10 +97,20 @@ catch(PDOException $e){
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
                         </li>
                         <li>
-                            <label for="player_image">Upload Player Image (optional): </label>
-                            <input type="file" name="player_image" id="player_image">
+                            <p>
+                                <img src="images/<?=$image_rows['image_name']?>" alt="players image" id="current_image_preview">
+                            </p>
+                            <p>
+                                <img src="#" alt="new image" id="new_image_preview">
+                            </p>
                         </li>
-                        <p id="edit_page_current_image">Current file: <img src="images/<?=$image_rows['image_name']?>" alt="players image"></p>
+                        <li>
+                            <label for="player_image" id="add_image_label">Change Player Image</label>
+                            <input type="file" name="player_image" id="player_image" onchange="show(this)">
+                        </li>
+                        <p id="remove_image_link">
+                            <a href="">&times; Remove Image</a>
+                        </p>
                     </ul>
                 </fieldset>
                 <button type="submit" id="submit" name="submit">Update Player</button>
@@ -108,7 +118,7 @@ catch(PDOException $e){
             </form>
         <?php endforeach ?>
     </div>
-    <div id="edit_player_delete">
+    <div id="delete_player_link">
         <a href="delete.php?player_id=<?=$page_player_id?>" onClick="return confirm('Are you sure you want to delete the Player?');">Delete Player</a>
     </div>
 </body>

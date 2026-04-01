@@ -330,7 +330,7 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
 
 $player_id = $_GET['player_id'];
 
-$update_table_players_query = "UPDATE Players 
+$players_table_update_query = "UPDATE Players 
                                SET player_name = :player_name, 
                                    player_age = :player_age,
                                    player_height = :player_height,
@@ -339,7 +339,7 @@ $update_table_players_query = "UPDATE Players
                                    player_jersey_number = :player_jersey_number,
                                    player_profile_description = :player_profile_description 
                                WHERE player_id = :player_id";
-$statement_player_update = $db->prepare($update_table_players_query);
+$statement_players_table_update = $db->prepare($players_table_update_query);
 
 // $update_table_satistics_query = "UPDATE Player_satistics
 //                                  SET number_of_matches_played = :number_of_matches_played,
@@ -351,24 +351,36 @@ $statement_player_update = $db->prepare($update_table_players_query);
                         
 // $statement_satistics_update = $db->prepare($update_table_satistics_query);
 
+$images_table_select_query = "SELECT player_id, image_name
+                              FROM Images
+                              WHERE player_id = :player_id";
+
+$statement_images_table_select_query = $db->prepare($images_table_select_query);
+
+$images_table_insert_query = "INSERT INTO Images (player_id, image_name)
+                             VALUES (:player_id, :image_name)";
+
+$statement_images_table_insert_query = $db->prepare($images_table_insert_query);
+
 // PLAYER IMAGE
-$player_image_query = "UPDATE Images SET image_name = :image_name
+$images_table_update_query = "UPDATE Images SET image_name = :image_name
                         WHERE player_id = :player_id";
 
-$statement_player_image_query = $db->prepare($player_image_query);
+
+$statement_images_table_update_query = $db->prepare($images_table_update_query);
 
 try{
     $db->beginTransaction();
 
-    $statement_player_update->bindValue(":player_name", $validated_player_name);
-    $statement_player_update->bindValue(":player_age", $validated_player_age);
-    $statement_player_update->bindValue(":player_height", $validated_player_height);
-    $statement_player_update->bindValue(":player_weight", $validated_player_weight);
-    $statement_player_update->bindValue(":player_playing_position", $validated_player_playing_position);
-    $statement_player_update->bindValue(":player_jersey_number", $validated_player_jersey_number);
-    $statement_player_update->bindValue(":player_profile_description", $validated_player_profile_description);
-    $statement_player_update->bindValue(":player_id", $player_id);
-    $statement_player_update->execute();
+    $statement_players_table_update->bindValue(":player_name", $validated_player_name);
+    $statement_players_table_update->bindValue(":player_age", $validated_player_age);
+    $statement_players_table_update->bindValue(":player_height", $validated_player_height);
+    $statement_players_table_update->bindValue(":player_weight", $validated_player_weight);
+    $statement_players_table_update->bindValue(":player_playing_position", $validated_player_playing_position);
+    $statement_players_table_update->bindValue(":player_jersey_number", $validated_player_jersey_number);
+    $statement_players_table_update->bindValue(":player_profile_description", $validated_player_profile_description);
+    $statement_players_table_update->bindValue(":player_id", $player_id);
+    $statement_players_table_update->execute();
 
     // $statement_satistics_update->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
     // $statement_satistics_update->bindValue(":total_goals", $validated_total_goals);
@@ -378,11 +390,20 @@ try{
     // $statement_satistics_update->bindValue(":player_id", $player_id);
     // $statement_satistics_update->execute();
 
-    if(isset($image_name)){
-        $statement_player_image_query->bindValue(":player_id", $player_id);
-        $statement_player_image_query->bindValue(":image_name", $image_name);
+    $statement_images_table_select_query->bindValue(":player_id", $player_id);
+    $statement_images_table_select_query->execute();
+    $statement_images_table_select_query_rows = $statement_images_table_select_query->fetchAll(PDO::FETCH_ASSOC);
 
-        $statement_player_image_query->execute();
+    if(isset($image_name) && count($statement_images_table_select_query_rows) > 0){
+        $statement_images_table_update_query->bindValue(":player_id", $player_id);
+        $statement_images_table_update_query->bindValue(":image_name", $image_name);
+
+        $statement_images_table_update_query->execute();
+    }
+    else{
+        $statement_images_table_insert_query->bindValue(":player_id", $player_id);
+        $statement_images_table_insert_query->bindValue(":image_name", $image_name);
+        $statement_images_table_insert_query->execute();
     }
 
     $db->commit();
