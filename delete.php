@@ -10,21 +10,31 @@ $page_player_id = $_GET['player_id'];
 $delete_player_query = "DELETE FROM Players WHERE player_id = :player_id";
 $statement_delete_player = $db->prepare($delete_player_query);
 
+$remove_image_query = "DELETE FROM Images WHERE player_id = :player_id";
+$statement_remove_image_query = $db->prepare($remove_image_query);
+
 try{
     $db->beginTransaction();
 
     // $statement_delete_player_satistics->bindValue(":player_id", $page_player_id);
     // $statement_delete_player_satistics->execute();
 
-    $statement_delete_player->bindValue(":player_id", $page_player_id);
-    $statement_delete_player->execute();
+    if(isset($_GET['action']) && $_GET['action'] === 'remove_image'){
+        $statement_remove_image_query->bindValue(":player_id", $page_player_id);
+        $statement_remove_image_query->execute();
+        $db->commit();
+        header("Location: players.php?message=removed");
 
-    $db->commit();
+        exit();
+    }
+    if(!isset($_GET['action'])){
+        $statement_delete_player->bindValue(":player_id", $page_player_id);
+        $statement_delete_player->execute();
+        $db->commit();
+        header("Location: players.php?message=deleted");
 
-    header("Location: players.php?message=deleted");
-
-    exit();
-
+        exit();
+    }
 }
 catch(PDOException $e){
     echo "Error in deleting: " . $e->getMessage();

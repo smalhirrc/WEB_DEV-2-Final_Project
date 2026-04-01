@@ -36,6 +36,7 @@ try{
     $statement_player_current_image_query->execute();
 
     $image_rows = $statement_player_current_image_query->fetch(PDO::FETCH_ASSOC);
+    $image_set = $image_rows ? 1 : 0;
 
     $db->commit();
 }
@@ -50,7 +51,9 @@ catch(PDOException $e){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Player</title>
-    <script src="data_form_validate.js"></script>
+    <script>
+        let image_set = <?=$image_set?>;
+    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -97,19 +100,19 @@ catch(PDOException $e){
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
                         </li>
                         <li>
-                            <p>
-                                <img src="images/<?=$image_rows['image_name']?>" alt="players image" id="current_image_preview">
+                            <p class="current_image_preview">
+                                <img src="images/<?=$image_rows['image_name']?>" alt="player's image">
                             </p>
-                            <p>
-                                <img src="#" alt="new image" id="new_image_preview">
+                            <p class="new_image_preview">
+                                <img src="#" alt="new image">
                             </p>
                         </li>
                         <li>
-                            <label for="player_image" id="add_image_label">Change Player Image</label>
-                            <input type="file" name="player_image" id="player_image" onchange="show(this)">
+                            <label for="player_image" class="add_image_label">Change Player Image</label>
+                            <input type="file" name="player_image" id="player_image" onchange="show_preview(this)">
                         </li>
                         <p id="remove_image_link">
-                            <a href="">&times; Remove Image</a>
+                            <a href="delete.php?player_id=<?=$page_player_id?>&action=remove_image" onClick="return confirm('Do you want to remove image?');">&times; Remove Image</a>
                         </p>
                     </ul>
                 </fieldset>
@@ -121,5 +124,6 @@ catch(PDOException $e){
     <div id="delete_player_link">
         <a href="delete.php?player_id=<?=$page_player_id?>" onClick="return confirm('Are you sure you want to delete the Player?');">Delete Player</a>
     </div>
+    <script src="data_form_validate.js"></script>
 </body>
 </html>

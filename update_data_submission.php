@@ -400,7 +400,7 @@ try{
 
         $statement_images_table_update_query->execute();
     }
-    else{
+    else if(isset($image_name) && count($statement_images_table_select_query_rows) === 0){
         $statement_images_table_insert_query->bindValue(":player_id", $player_id);
         $statement_images_table_insert_query->bindValue(":image_name", $image_name);
         $statement_images_table_insert_query->execute();

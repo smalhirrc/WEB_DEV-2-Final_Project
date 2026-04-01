@@ -57,15 +57,27 @@ function load()
     let player_data_form_reset_button = document.getElementById("reset");
     player_data_form_reset_button.addEventListener("click", reset_all);
 
+    let remove_image_link = document.querySelector("p#remove_image_link a");
+
+    console.log(image_set);
+
     // function will run
+    if(image_set === 1){
+        console.log("image set");
+        remove_image_link.style.display = "inline-block";
+    }
+    else{
+        console.log("image not set");
+        remove_image_link.style.display = "none";
+    }
 }
 
 // function will make previous image display none
 // new image display block - src of new display is selected file
 
-function show(input){
-    let current_image_preview = document.getElementById("current_image_preview");
-    let new_image_preview = document.getElementById("new_image_preview");
+function show_preview(input){
+    let current_image_preview = document.querySelector("p.current_image_preview img");
+    let new_image_preview = document.querySelector("p.new_image_preview img");
 
     let file = input.files[0];
 
@@ -74,6 +86,19 @@ function show(input){
     new_image_preview.src = render;
     new_image_preview.style.display = "block";
     current_image_preview.style.display = "none";
+}
+
+function hide_instruction(input){
+    let add_player_current_image = document.getElementById("upload_instruction");
+    let new_image_preview = document.querySelector("p.new_image_preview img");
+
+    let file = input.files[0];
+
+    let render = URL.createObjectURL(file);
+    
+    new_image_preview.src = render;
+    add_player_current_image.style.display = "none";
+    new_image_preview.style.display = "block";
 }
 
 

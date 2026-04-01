@@ -6,6 +6,9 @@ require "connect.php";
 if(isset($_GET['message']) && $_GET['message'] === "deleted"){
     echo "Player deleted successfully";
 }
+if(isset($_GET['message']) && $_GET['message'] === "removed"){
+    echo "Image removed successfully";
+}
 
 $players_query = "SELECT p.player_id, p.player_name, p.player_profile_description 
                   FROM Players p";
