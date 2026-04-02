@@ -32,7 +32,7 @@ $player_page_query = "SELECT p.player_name,
 
 $statement_player_page_query = $db->prepare($player_page_query);
 
-$player_current_image_query = "SELECT image_name 
+$player_current_image_query = "SELECT image_medium
                                FROM Images 
                                WHERE player_id = :player_id";
 
@@ -68,7 +68,7 @@ catch(PDOException $e){
     <div id="player_profile">
         <div id="player_card">
             <div id="player_image">
-                <img src="images/<?=$image_rows['image_name']?>" alt="image of football">
+                <img src="images/<?=$image_rows['image_medium']?>" alt="image of player">
             </div>
             <div id="player_info">
             <?php foreach($rows as $player): ?>

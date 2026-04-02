@@ -15,7 +15,7 @@ $players_query = "SELECT p.player_id, p.player_name, p.player_profile_descriptio
 
 $statement = $db->prepare($players_query);
 
-$player_current_image_query = "SELECT image_name 
+$player_current_image_query = "SELECT image_thumbnail 
                                FROM Images
                                WHERE player_id = :player_id";
 
@@ -54,7 +54,7 @@ catch(PDOException $e){
                 ?>
                 <div class="player_row">
                     <div class="player_image">
-                        <img src="images/<?=$image_rows[0]['image_name']?>" alt="players image">
+                        <img src="images/<?=$image_rows[0]['image_thumbnail']?>" alt="players image">
                     </div>
                     <p>
                         <a href="player_page.php?player_id=<?=$player_id?>"><?=$player['player_name']?></a>

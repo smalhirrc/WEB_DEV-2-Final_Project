@@ -308,6 +308,58 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
         $image_name = $_FILES['player_image']['name'];
 
         move_uploaded_file($temporary_image_path, $new_image_path);
+
+// THUMBNAIL   
+        $src_image = imagecreatefromjpeg($new_image_path);
+        $src_width = imagesx($src_image);
+        $src_height = imagesy($src_image);        
+        $src_x = 0;
+        $src_y = 0;
+        $dst_x = 0;
+        $dst_y = 0;
+        $dst_width = 60;
+        $dst_height = 60;
+        $dst_image = imagecreatetruecolor($dst_width, $dst_height);
+
+
+        imagecopyresampled($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_width, $dst_height, $src_width, $src_height);
+    
+        $thumbnail = dirname(__FILE__) . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . pathinfo($image_name, PATHINFO_FILENAME) . "_thumbnail." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        $image_thumbnail_name = pathinfo($image_name, PATHINFO_FILENAME) . "_thumbnail." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        imagejpeg($dst_image, $thumbnail);
+
+        imagedestroy($src_image);
+        imagedestroy($dst_image);
+
+
+// MEDIUM
+        $medium_src_image = imagecreatefromjpeg($new_image_path);
+        $medium_src_width = imagesx($src_image);
+        $medium_src_height = imagesy($src_image);        
+        $medium_src_x = 0;
+        $medium_src_y = 0;
+        $medium_dst_x = 0;
+        $medium_dst_y = 0;
+        $medium_dst_width = 180;
+        $medium_dst_height = 180;
+        $medium_dst_image = imagecreatetruecolor($medium_dst_width, $medium_dst_height);
+
+
+        imagecopyresampled($medium_dst_image, $medium_src_image, $medium_dst_x, $medium_dst_y, $medium_src_x, $medium_src_y, $medium_dst_width, $medium_dst_height, $medium_src_width, $medium_src_height);
+    
+        $medium_path = dirname(__FILE__) . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . pathinfo($image_name, PATHINFO_FILENAME) . "_medium." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        $medium = pathinfo($image_name, PATHINFO_FILENAME) . "_medium." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        imagejpeg($medium_dst_image, $medium_path);
+
+        imagedestroy($medium_src_image);
+        imagedestroy($medium_dst_image);
+    }
+    else{
+        
     }
 }
 
@@ -357,13 +409,13 @@ $images_table_select_query = "SELECT player_id, image_name
 
 $statement_images_table_select_query = $db->prepare($images_table_select_query);
 
-$images_table_insert_query = "INSERT INTO Images (player_id, image_name)
-                             VALUES (:player_id, :image_name)";
+$images_table_insert_query = "INSERT INTO Images (player_id, image_name, image_thumbnail, image_medium)
+                             VALUES (:player_id, :image_name, :image_thumbnail, :image_medium)";
 
 $statement_images_table_insert_query = $db->prepare($images_table_insert_query);
 
 // PLAYER IMAGE
-$images_table_update_query = "UPDATE Images SET image_name = :image_name
+$images_table_update_query = "UPDATE Images SET image_name = :image_name, image_thumbnail = :image_thumbnail, image_medium = :image_medium
                         WHERE player_id = :player_id";
 
 
@@ -382,14 +434,6 @@ try{
     $statement_players_table_update->bindValue(":player_id", $player_id);
     $statement_players_table_update->execute();
 
-    // $statement_satistics_update->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
-    // $statement_satistics_update->bindValue(":total_goals", $validated_total_goals);
-    // $statement_satistics_update->bindValue(":total_assists", $validated_total_assists);
-    // $statement_satistics_update->bindValue(":yellow_cards", $validated_yellow_cards);
-    // $statement_satistics_update->bindValue(":red_cards", $validated_red_cards);
-    // $statement_satistics_update->bindValue(":player_id", $player_id);
-    // $statement_satistics_update->execute();
-
     $statement_images_table_select_query->bindValue(":player_id", $player_id);
     $statement_images_table_select_query->execute();
     $statement_images_table_select_query_rows = $statement_images_table_select_query->fetchAll(PDO::FETCH_ASSOC);
@@ -397,12 +441,17 @@ try{
     if(isset($image_name) && count($statement_images_table_select_query_rows) > 0){
         $statement_images_table_update_query->bindValue(":player_id", $player_id);
         $statement_images_table_update_query->bindValue(":image_name", $image_name);
+        $statement_images_table_update_query->bindValue(":image_thumbnail", $image_thumbnail_name);
+        $statement_images_table_update_query->bindValue(":image_medium", $medium);
 
         $statement_images_table_update_query->execute();
     }
     else if(isset($image_name) && count($statement_images_table_select_query_rows) === 0){
         $statement_images_table_insert_query->bindValue(":player_id", $player_id);
         $statement_images_table_insert_query->bindValue(":image_name", $image_name);
+        $statement_images_table_insert_query->bindValue(":image_thumbnail", $image_thumbnail_name);
+        $statement_images_table_update_query->bindValue(":image_medium", $medium);
+
         $statement_images_table_insert_query->execute();
     }
 

@@ -104,7 +104,7 @@ catch(PDOException $e){
                                 <img src="images/<?=$image_rows['image_name']?>" alt="player's image">
                             </p>
                             <p class="new_image_preview">
-                                <img src="#" alt="new image">
+                                <img src="#" alt="image">
                             </p>
                         </li>
                         <li>

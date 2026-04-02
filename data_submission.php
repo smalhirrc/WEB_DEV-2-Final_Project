@@ -311,6 +311,57 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
         $image_name = $_FILES['player_image']['name'];
 
         move_uploaded_file($temporary_image_path, $new_image_path);
+
+
+
+// THUMBNAIL   
+        $src_image = imagecreatefromjpeg($new_image_path);
+        $src_width = imagesx($src_image);
+        $src_height = imagesy($src_image);        
+        $src_x = 0;
+        $src_y = 0;
+        $dst_x = 0;
+        $dst_y = 0;
+        $dst_width = 60;
+        $dst_height = 60;
+        $dst_image = imagecreatetruecolor($dst_width, $dst_height);
+
+
+        imagecopyresampled($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_width, $dst_height, $src_width, $src_height);
+    
+        $thumbnail = dirname(__FILE__) . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . pathinfo($image_name, PATHINFO_FILENAME) . "_thumbnail." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        $image_thumbnail_name = pathinfo($image_name, PATHINFO_FILENAME) . "_thumbnail." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        imagejpeg($dst_image, $thumbnail);
+
+        imagedestroy($src_image);
+        imagedestroy($dst_image);
+
+
+// MEDIUM
+        $medium_src_image = imagecreatefromjpeg($new_image_path);
+        $medium_src_width = imagesx($src_image);
+        $medium_src_height = imagesy($src_image);        
+        $medium_src_x = 0;
+        $medium_src_y = 0;
+        $medium_dst_x = 0;
+        $medium_dst_y = 0;
+        $medium_dst_width = 180;
+        $medium_dst_height = 180;
+        $medium_dst_image = imagecreatetruecolor($medium_dst_width, $medium_dst_height);
+
+
+        imagecopyresampled($medium_dst_image, $medium_src_image, $medium_dst_x, $medium_dst_y, $medium_src_x, $medium_src_y, $medium_dst_width, $medium_dst_height, $medium_src_width, $medium_src_height);
+    
+        $medium_path = dirname(__FILE__) . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . pathinfo($image_name, PATHINFO_FILENAME) . "_medium." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        $medium = pathinfo($image_name, PATHINFO_FILENAME) . "_medium." . pathinfo($image_name, PATHINFO_EXTENSION);
+
+        imagejpeg($medium_dst_image, $medium_path);
+
+        imagedestroy($medium_src_image);
+        imagedestroy($medium_dst_image);
     }
 }
 
@@ -338,46 +389,35 @@ $statement_player_query = $db->prepare($players_query);
 // $statement_player_satistics_query = $db->prepare($player_satistics_query);
 
 // PLAYER IMAGE
-$player_image_query = "INSERT INTO Images (player_id, image_name) VALUES (:player_id, :image_name)";
+$player_image_query = "INSERT INTO Images (player_id, image_name, image_thumbnail, image_medium) VALUES (:player_id, :image_name, :image_thumbnail, :image_medium)";
 
 $statement_player_image_query = $db->prepare($player_image_query);
 
 try{
     $db->beginTransaction();
 
-    // CATEGORIES
-    // $statement_category_id->bindValue(":team_category", $team_category);
-
-    // $statement_category_id->execute();
-
-    // $validated_team_category_id = $statement_category_id->fetch(PDO::FETCH_ASSOC);
-    // $category_id = isset($validated_team_category_id['category_id']) ? $validated_team_category_id['category_id'] : null;
-
-    // TEAMS 
-    // $statement_team_query->bindValue(":team_name", $validated_team_name);
-    // $statement_team_query->bindValue(":team_coach_name", $validated_team_coach_name);
-    // $statement_team_query->bindValue(":team_home_ground", $validated_team_home_ground);
-    // $statement_team_query->bindValue(":team_founded_in_year", $validated_team_founded_in_year);
-    // $statement_team_query->bindValue(':category_id', $category_id);
-
-    // $statement_team_query->execute();
-
-    // $team_id = $db->lastInsertId();
-
     // PLAYERS 
     $statement_player_query->bindValue(':player_name', $validated_player_name);
-    // $statement_player_query->bindValue(':team_id', $team_id);
     $statement_player_query->bindValue(':player_age', $validated_player_age);
     $statement_player_query->bindValue(':player_height', $validated_player_height);
     $statement_player_query->bindValue(':player_weight', $validated_player_weight);
     $statement_player_query->bindValue(':player_playing_position', $validated_player_playing_position);
     $statement_player_query->bindValue(':player_jersey_number', $validated_player_jersey_number);
-    // $statement_player_query->bindValue(':category_id', $category_id);
     $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
 
     $statement_player_query->execute();
 
     $player_id = $db->lastInsertId();
+
+    // IMAGES
+    if(isset($image_name)){
+        $statement_player_image_query->bindValue(":player_id", $player_id);
+        $statement_player_image_query->bindValue(":image_name", $image_name);
+        $statement_player_image_query->bindValue(":image_thumbnail", $image_thumbnail_name);
+        $statement_player_image_query->bindValue(":image_medium", $medium);
+
+        $statement_player_image_query->execute();
+    }
 
     // PLAYER_SATISTICS
     // $statement_player_satistics_query->bindValue(':player_id', $player_id);
@@ -388,13 +428,6 @@ try{
     // $statement_player_satistics_query->bindValue(":red_cards", $validated_red_cards);
 
     // $statement_player_satistics_query->execute();
-    if(isset($image_name)){
-        $statement_player_image_query->bindValue(":player_id", $player_id);
-        $statement_player_image_query->bindValue(":image_name", $image_name);
-
-        $statement_player_image_query->execute();
-    }
-
     $db->commit();
 
     echo "Successfully saved Player!";

@@ -44,6 +44,12 @@ function reset_all()
     for(let i = 0; i < error_messages.length; i++){
         document.getElementsByClassName("error_field")[i].style.display = "none";
     }
+
+    let current_image_preview = document.querySelector("p.current_image_preview img");
+    let new_image_preview = document.querySelector("p.new_image_preview img");
+
+    current_image_preview.style.display = "block";
+    new_image_preview.style.display = "none";
 }
 
 function load()

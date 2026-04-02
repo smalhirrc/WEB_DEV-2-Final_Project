@@ -9,8 +9,7 @@ require("mutual_content.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Player's Data</title>
-    <script src="data_form_validate.js"></script>
+    <title>Add Player</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -58,7 +57,7 @@ require("mutual_content.php");
                     <li>
                         <p id="upload_instruction">Upload Player Image (optional):</p>
                         <p class="new_image_preview">
-                            <img src="#" alt="new image">
+                            <img src="#" alt="image">
                         </p>
                     </li>
                     <li>
@@ -136,5 +135,6 @@ require("mutual_content.php");
             <button type="reset" id="reset" name="reset">Reset</button>
         </form>
     </div>
+    <script src="data_form_validate.js"></script>
 </body>
 </html>
