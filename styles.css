@@ -315,7 +315,7 @@ main h1{
    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
-#player_image{
+#player_profile_image{
    /* width: 200px; */
    /* height: 200px; */
 
@@ -324,7 +324,7 @@ main h1{
 
 }
 
-#player_image img{
+#player_profile_image img{
    width: 100%;
    height: 100%;
    object-fit: cover;
@@ -490,7 +490,7 @@ legend{
 }
 
 #player_data_form input:last-child{
-   display: none;
+   /* display: none; */
 }
 
 #remove_image_link a{
@@ -514,7 +514,7 @@ legend{
 }
 
 /* CURRENT IMAGE DISPLAY ON EDIT PLAYER PAGE */
-p.current_image_preview img{
+p.current_image_preview{
    width: 180px;
    height: 180px;
 
@@ -525,11 +525,22 @@ p.current_image_preview img{
    width: 100%;
    height: 100%;
 
-   object-fit: cover;
+   object-fit: contain;
+}
+
+p.new_image_preview{
+   display: none;
+   width: 180px;
+   height: 180px;
 }
 
 p.new_image_preview img{
    display: none;
+
+   width: 100%;
+   height: 100%;
+
+   object-fit: contain;
 }
 
 #submit{

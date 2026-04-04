@@ -138,145 +138,6 @@ function validate_player_profile_description($input)
 
 $validated_player_profile_description = validate_player_profile_description($sanitized_player_profile_description);
 
-// TEAM NAME
-$sanitized_team_name = sanitize_string('team_name');
-
-function validate_team_name($input)
-{
-    if(!empty(trim($input))){
-        return $input;
-    }
-    else{
-        return false;
-    }
-}
-
-$validated_team_name = validate_team_name($sanitized_team_name);
-
-// TEAM COACH NAME
-$sanitized_team_coach_name = sanitize_string('team_coach_name');
-
-function validate_team_coach_name($input)
-{
-    if(!empty(trim($input))){
-        return $input;
-    }
-    else{
-        return false;
-    }
-}
-
-$validated_team_coach_name = validate_team_coach_name($sanitized_team_coach_name);
-
-// TEAM FOUNDED IN YEAR
-$sanitized_team_founded_in_year = sanitize_number('team_founded_in_year');
-
-function validate_team_founded_in_year($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1900, "max_range" => 2099)));
-    }
-    return false;
-}
-
-$validated_team_founded_in_year = validate_team_founded_in_year($sanitized_team_founded_in_year);
-
-// TEAM CATEGORY
-function validate_team_category()
-{
-    if(isset($_POST['team_category'])){
-        return $_POST['team_category'];
-    }
-    return false;
-}
-
-$team_category = validate_team_category();
-
-// TEAM HOME GROUND
-$sanitized_team_home_ground = sanitize_string('team_home_ground');
-
-function validate_team_home_ground($input)
-{
-    if(!empty(trim($input))){
-        return $input;
-    }
-    else{
-        return false;
-    }
-}
-
-$validated_team_home_ground = validate_team_home_ground($sanitized_team_home_ground);
-
-// NUMBER OF MATCHES
-$sanitized_number_of_matches_played = sanitize_number('number_of_matches_played');
-
-function validate_number_of_matches_played($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-    
-    return false;
-}
-
-$validated_number_of_matches_played = validate_number_of_matches_played($sanitized_number_of_matches_played);
-
-// TOTAL GOALS
-$sanitized_total_goals = sanitize_number('total_goals');
-
-function validate_total_goals($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;
-}
-
-$validated_total_goals = validate_total_goals($sanitized_total_goals);
-
-// TOTAL ASSISTS
-$sanitized_total_assists = sanitize_number('total_assists');
-
-function validate_total_assists($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;
-}
-
-$validated_total_assists = validate_total_assists($sanitized_total_assists);
-
-// YELLOW CARDS
-$sanitized_yellow_cards = sanitize_number('yellow_cards');
-
-function validate_yellow_cards($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;   
-}
-
-$validated_yellow_cards = validate_yellow_cards($sanitized_yellow_cards);
-
-// RED CARDS
-$sanitized_red_cards = sanitize_number('red_cards');
-
-function validate_red_cards($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;
-}
-
-$validated_red_cards = validate_red_cards($sanitized_red_cards);
-
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
 {
@@ -309,13 +170,15 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
 
     if(file_is_an_image($temporary_image_path, $new_image_path)){
         $image_name = $_FILES['player_image']['name'];
+        $image_mime_type = getimagesize($temporary_image_path)['mime'];
 
         move_uploaded_file($temporary_image_path, $new_image_path);
 
-
+        $image_type = pathinfo($new_image_path, PATHINFO_EXTENSION);
+        $function_name = "imagecreatefrom" . $image_type;
 
 // THUMBNAIL   
-        $src_image = imagecreatefromjpeg($new_image_path);
+        $src_image = $function_name($new_image_path);
         $src_width = imagesx($src_image);
         $src_height = imagesy($src_image);        
         $src_x = 0;
@@ -340,7 +203,7 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
 
 
 // MEDIUM
-        $medium_src_image = imagecreatefromjpeg($new_image_path);
+        $medium_src_image = $function_name($new_image_path);
         $medium_src_width = imagesx($src_image);
         $medium_src_height = imagesy($src_image);        
         $medium_src_x = 0;
@@ -363,40 +226,21 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
         imagedestroy($medium_src_image);
         imagedestroy($medium_dst_image);
     }
+    else{
+        $image_name = false;
+    }
 }
 
-// PREPARE QUERY TO GET CATEGORY_ID FROM CATEGORIES 
-// $category_id_query = "SELECT category_id FROM Categories WHERE category_type = :team_category";
-
-// $statement_category_id = $db->prepare($category_id_query);
-
-// PREPARE QUERY TO INSERT TEAM
-// $team_query = "INSERT INTO Teams (team_name, team_coach_name, team_home_ground, team_founded_in_year, category_id)
-//                            VALUES (:team_name, :team_coach_name, :team_home_ground, :team_founded_in_year, :category_id)";
-
-// $statement_team_query = $db->prepare($team_query);
-
 // PREPARE QUERY TO INSERT PLAYER
-$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description) 
-                        VALUES        (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description)";
+$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, image_thumbnail, image_medium) 
+                        VALUES        (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description, :image_name, :image_thumbnail, :image_medium)";
 
 $statement_player_query = $db->prepare($players_query);
-
-// PREPARE QUERY TO INSERT PLAYER SATISTICS
-// $player_satistics_query = "INSERT INTO Player_satistics (player_id, number_of_matches_played, total_goals, total_assists, yellow_cards, red_cards)
-//                                                   VALUES (:player_id, :number_of_matches_played, :total_goals, :total_assists, :yellow_cards, :red_cards)";
-
-// $statement_player_satistics_query = $db->prepare($player_satistics_query);
-
-// PLAYER IMAGE
-$player_image_query = "INSERT INTO Images (player_id, image_name, image_thumbnail, image_medium) VALUES (:player_id, :image_name, :image_thumbnail, :image_medium)";
-
-$statement_player_image_query = $db->prepare($player_image_query);
 
 try{
     $db->beginTransaction();
 
-    // PLAYERS 
+    // PLAYER
     $statement_player_query->bindValue(':player_name', $validated_player_name);
     $statement_player_query->bindValue(':player_age', $validated_player_age);
     $statement_player_query->bindValue(':player_height', $validated_player_height);
@@ -405,29 +249,26 @@ try{
     $statement_player_query->bindValue(':player_jersey_number', $validated_player_jersey_number);
     $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
 
-    $statement_player_query->execute();
+    // IMAGE
+    if(isset($image_name) && $image_name !== false){
+        $statement_player_query->bindValue(":image_name", $image_name);
+        $statement_player_query->bindValue(":image_thumbnail", $image_thumbnail_name);
+        $statement_player_query->bindValue(":image_medium", $medium);
 
-    $player_id = $db->lastInsertId();
+        $statement_player_query->execute();
+    }
+    else if(isset($image_name) && $image_name === false){
+        header("Location: success.php?status=image_invalid");
+        exit();
+    }
+    else{
+        $statement_player_query->bindValue(":image_name", null);
+        $statement_player_query->bindValue(":image_thumbnail", null);
+        $statement_player_query->bindValue(":image_medium", null);
 
-    // IMAGES
-    if(isset($image_name)){
-        $statement_player_image_query->bindValue(":player_id", $player_id);
-        $statement_player_image_query->bindValue(":image_name", $image_name);
-        $statement_player_image_query->bindValue(":image_thumbnail", $image_thumbnail_name);
-        $statement_player_image_query->bindValue(":image_medium", $medium);
-
-        $statement_player_image_query->execute();
+        $statement_player_query->execute();
     }
 
-    // PLAYER_SATISTICS
-    // $statement_player_satistics_query->bindValue(':player_id', $player_id);
-    // $statement_player_satistics_query->bindValue(":number_of_matches_played", $validated_number_of_matches_played);
-    // $statement_player_satistics_query->bindValue(":total_goals", $validated_total_goals);
-    // $statement_player_satistics_query->bindValue(":total_assists", $validated_total_assists);
-    // $statement_player_satistics_query->bindValue(":yellow_cards", $validated_yellow_cards);
-    // $statement_player_satistics_query->bindValue(":red_cards", $validated_red_cards);
-
-    // $statement_player_satistics_query->execute();
     $db->commit();
 
     echo "Successfully saved Player!";

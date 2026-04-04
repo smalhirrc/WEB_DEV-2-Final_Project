@@ -45,10 +45,14 @@ function reset_all()
         document.getElementsByClassName("error_field")[i].style.display = "none";
     }
 
+    let current_image_preview_container = document.querySelector("p.current_image_preview");
     let current_image_preview = document.querySelector("p.current_image_preview img");
+    let new_image_preview_container = document.querySelector("p.new_image_preview");
     let new_image_preview = document.querySelector("p.new_image_preview img");
 
+    current_image_preview_container.style.display = "block";
     current_image_preview.style.display = "block";
+    new_image_preview_container.style.display = "none";
     new_image_preview.style.display = "none";
 }
 
@@ -82,20 +86,23 @@ function load()
 // new image display block - src of new display is selected file
 
 function show_preview(input){
-    let current_image_preview = document.querySelector("p.current_image_preview img");
+    let current_image_preview_container = document.querySelector("p.current_image_preview");
     let new_image_preview = document.querySelector("p.new_image_preview img");
+    let new_image_preview_container = document.querySelector("p.new_image_preview");
 
     let file = input.files[0];
 
     const render = URL.createObjectURL(file);
 
     new_image_preview.src = render;
+    current_image_preview_container.style.display = "none";
+    new_image_preview_container.style.display = "block";
     new_image_preview.style.display = "block";
-    current_image_preview.style.display = "none";
 }
 
 function hide_instruction(input){
     let add_player_current_image = document.getElementById("upload_instruction");
+    let new_image_preview_container = document.querySelector("p.new_image_preview");
     let new_image_preview = document.querySelector("p.new_image_preview img");
 
     let file = input.files[0];
@@ -104,6 +111,7 @@ function hide_instruction(input){
     
     new_image_preview.src = render;
     add_player_current_image.style.display = "none";
+    new_image_preview_container.style.display = "block";
     new_image_preview.style.display = "block";
 }
 

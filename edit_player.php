@@ -5,24 +5,19 @@ require "mutual_content.php";
 
 $page_player_id = $_GET['player_id'];
 
-$player_page_query = "SELECT p.player_id,
-                             p.player_name, 
-                             p.player_age, 
-                             p.player_height, 
-                             p.player_weight, 
-                             p.player_playing_position, 
-                             p.player_jersey_number, 
-                             p.player_profile_description
-                      FROM Players p
-                      WHERE p.player_id = :player_id";
+$player_page_query = "SELECT player_id,
+                             player_name, 
+                             player_age, 
+                             player_height, 
+                             player_weight, 
+                             player_playing_position, 
+                             player_jersey_number, 
+                             player_profile_description,
+                             image_name
+                      FROM Players
+                      WHERE player_id = :player_id";
 
 $statement_player_page_query = $db->prepare($player_page_query);
-
-$player_current_image_query = "SELECT image_name 
-                               FROM Images 
-                               WHERE player_id = :player_id";
-
-$statement_player_current_image_query = $db->prepare($player_current_image_query);
 
 try{
     $db->beginTransaction();
@@ -31,12 +26,6 @@ try{
     $statement_player_page_query->execute();
 
     $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
-
-    $statement_player_current_image_query->bindValue(":player_id", $page_player_id);
-    $statement_player_current_image_query->execute();
-
-    $image_rows = $statement_player_current_image_query->fetch(PDO::FETCH_ASSOC);
-    $image_set = $image_rows ? 1 : 0;
 
     $db->commit();
 }
@@ -60,6 +49,7 @@ catch(PDOException $e){
 <div id="data_form_container">
         <h1>Update Player</h1>
         <?php foreach($rows as $player): ?>
+            <?php $image_set = $player['image_name'] !== null ? 1 : 0 ?>
             <form id="player_data_form" method="post" enctype="multipart/form-data" action="update_data_submission.php?player_id=<?=$player['player_id']?>">
                 <fieldset>
                     <legend><?=$player['player_name'] . "'s"?> Information</legend>
@@ -101,7 +91,7 @@ catch(PDOException $e){
                         </li>
                         <li>
                             <p class="current_image_preview">
-                                <img src="images/<?=$image_rows['image_name']?>" alt="player's image">
+                                <img src="images/<?=$player['image_name']?>" alt="player's image">
                             </p>
                             <p class="new_image_preview">
                                 <img src="#" alt="image">
