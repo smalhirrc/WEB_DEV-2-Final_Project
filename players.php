@@ -32,6 +32,22 @@ catch(PDOException $e){
     <title>Players</title>
 </head>
 <body>
+    <aside aria-label="Sort Players" id="players_page_aside">
+        <nav id="players_sorting_bar">
+            <h2>Sort by:</h2>
+            <ul>
+                <li>
+                    <a href="">Name</a>
+                </li>
+                <li>
+                    <a href="">Date Created</a>
+                </li>
+                <li>
+                    <a href="">Date Modified</a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
     <main>
         <div id="player_list">
             <?php foreach($rows as $player): ?>
