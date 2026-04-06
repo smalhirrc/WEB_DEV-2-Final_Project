@@ -37,13 +37,13 @@ catch(PDOException $e){
             <h2>Sort by:</h2>
             <ul>
                 <li>
-                    <a href="">Name</a>
+                    <a href="sorting.php?sortby=name">Name</a>
                 </li>
                 <li>
-                    <a href="">Date Created</a>
+                    <a href="sorting.php?sortby=createdat">Date Created</a>
                 </li>
                 <li>
-                    <a href="">Date Modified</a>
+                    <a href="sorting.php?sortby=modifiedat">Date Modified</a>
                 </li>
             </ul>
         </nav>
