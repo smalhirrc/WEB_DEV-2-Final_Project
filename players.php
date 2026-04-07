@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require "mutual_content.php";
 require "connect.php";
 
@@ -32,6 +33,7 @@ catch(PDOException $e){
     <title>Players</title>
 </head>
 <body>
+    <?php if(isset($_SESSION['logged_in'])): ?>
     <aside aria-label="Sort Players" id="players_page_aside">
         <nav id="players_sorting_bar">
             <h2>Sort by:</h2>
@@ -48,6 +50,7 @@ catch(PDOException $e){
             </ul>
         </nav>
     </aside>
+    <?php endif ?>
     <main>
         <div id="player_list">
             <?php foreach($rows as $player): ?>
