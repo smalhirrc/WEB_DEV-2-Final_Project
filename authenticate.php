@@ -43,18 +43,18 @@ if ($admin && $admin['passwords'] === $validated_password) {
     }
 
     if(isset($_GET['directto']) && $_GET['directto'] === "add"){
-        header("Location: add_data.php");
+        header("Location: add_data.php?message=success");
         exit();
     }
 
     if(isset($_GET['directto']) && $_GET['directto'] === "homepage"){
-        header("Location: index.php");
+        header("Location: index.php?message=success");
         exit();
     }
 
     if(isset($_GET['directto']) && $_GET['directto'] === "edit"){
         $player_id = $_GET['player_id'];
-        header("Location: edit_player.php?player_id=$player_id");
+        header("Location: edit_player.php?player_id=$player_id&?message=success");
         exit();
     }
 } 

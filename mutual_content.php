@@ -33,6 +33,9 @@ $is_admin = $_SESSION['is_admin'] === true;
             <?php endif ?>
         </div>
     </header>
+    <?php if(isset($_GET['message']) && $_GET['message'] === 'success'):?>
+    <?= "<h1>WELCOME, You are now logged in!</h1>" ?>
+    <?php endif ?>
     <footer>
 
     </footer>
