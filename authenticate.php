@@ -47,6 +47,12 @@ if ($admin && $admin['passwords'] === $validated_password) {
         header("Location: index.php");
         exit();
     }
+
+    if(isset($_GET['directto']) && $_GET['directto'] === "edit"){
+        $player_id = $_GET['player_id'];
+        header("Location: edit_player.php?player_id=$player_id");
+        exit();
+    }
 } 
 else{
     echo "Invalid username or password";

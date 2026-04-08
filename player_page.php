@@ -56,7 +56,7 @@ catch(PDOException $e){
         </div>
         <?php endforeach ?>
         <div id="edit_player_link">
-            <a href="log_in.php?player_id=<?=$page_player_id?>">Edit Player</a>
+            <a href="log_in.php?for=edit&player_id=<?=$page_player_id?>">Edit Player</a>
         </div>
     </div>
 </body>
