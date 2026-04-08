@@ -2,7 +2,7 @@
 
 require "connect.php";
 
-function sanitize_string($key)
+function sanitizer($key)
 {
     $input_value = isset($_POST[$key]) ? $_POST[$key] : "";
 
@@ -11,9 +11,9 @@ function sanitize_string($key)
     return $sanitized_input;
 }
 
-$sanitized_user_name = sanitize_string('user_name');
+$sanitized_user_name = sanitizer('user_name');
 
-$sanitized_password = sanitize_string('password');
+$sanitized_password = sanitizer('password');
 
 function validate_input($input){
     if(!empty(trim($input))){
@@ -35,19 +35,16 @@ $admin = $statement_admin_query->fetch(PDO::FETCH_ASSOC);
 
 // If user exists and password matches
 if ($admin && $admin['passwords'] === $validated_password) {
-    if(isset($_GET['player_id'])){
-        session_start();
-        $_SESSION['logged_in'] = true;
+    session_start();
+    $_SESSION['logged_in'] = true;
 
-        $player_id = $_GET['player_id'];
-        header("Location: edit_player.php?player_id=$player_id");
+    if(isset($_GET['directto']) && $_GET['directto'] === "add"){
+        header("Location: add_data.php");
         exit();
     }
-    else{
-        session_start();
-        $_SESSION['logged_in'] = true;
-        
-        header("Location: add_data.php");
+
+    if(isset($_GET['directto']) && $_GET['directto'] === "homepage"){
+        header("Location: index.php");
         exit();
     }
 } 

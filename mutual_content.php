@@ -1,4 +1,7 @@
 <?php
+session_start();
+
+$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 
 ?>
 <!DOCTYPE html>
@@ -16,9 +19,13 @@
         </div>
         <div id="header_links">
             <a href='index.php'>Homepage</a>
-            <a href="log_in.php">Add Player</a>
+            <a href="log_in.php?for=add">Add Player</a>
             <a href="players.php">See Players</a>
-            <a href="log_in.php">Log In</a>
+            <?php if($logged_in): ?>
+            <a href="log_in.php?for=logout">Log Out</a>
+            <?php else: ?>
+            <a href="log_in.php?for=login">Log In</a>
+            <?php endif ?>
         </div>
     </header>
     <footer>

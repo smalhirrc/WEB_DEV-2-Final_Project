@@ -1,24 +1,28 @@
 <?php
-
 session_start();
-
-if(isset($_SESSION['logged_in'])){
-    if(isset($_GET['player_id'])){
-        $player_id = $_GET['player_id'];
-
-        header("Location: edit_player.php?player_id=$player_id");
-        exit();
-    }
-    else{
+// CAME HERE FROM 'ADD PLAYER' LINK ON INDEX PAGE
+if(isset($_GET['for']) && $_GET['for'] === "add"){
+    $directto = "add";
+    // if session is logged in 
+    if($_SESSION['logged_in'] && $_SESSION['logged_in'] === true){
         header("Location: add_data.php");
         exit();
     }
+    // else fill form below 
 }
 
-require "mutual_content.php";
+// CAME HERE FROM 'LOG IN' LINK ON INDEX PAGE
+if(isset($_GET['for']) && $_GET['for'] === "login"){
+    $directto = "homepage";
+    // will come from log in link, only if not logged in
+    // fill form first
+}
 
-if(isset($_GET['player_id'])){
-    $player_id = $_GET['player_id'];
+// CAME HERE FROM 'LOG OUT' LINK ON INDEX PAGE
+if(isset($_GET['for']) && $_GET['for'] === "logout"){
+    session_destroy();
+    header("Location: index.php");
+    exit();
 }
 
 ?>
@@ -32,40 +36,20 @@ if(isset($_GET['player_id'])){
 <body>
     <header></header>
     <main>
-        <?php if(isset($_GET['player_id'])): ?>
-            <?php $player_id = $_GET['player_id']; ?>
-            <div class="login_container">
-                <form method="post" action="authenticate.php?player_id=<?=$player_id?>" class="login_form">
+        <div class="login_container">
+            <form method="post" action="authenticate.php?directto=<?=$directto?>" class="login_form">
 
-                    <h2>Login</h2>
+                <h2>Login</h2>
 
-                    <label for="user_name">Username: </label>
-                    <input type="text" id="user_name" name="user_name" placeholder="Enter your username">
+                <label for="user_name">Username: </label>
+                <input type="text" id="user_name" name="user_name" placeholder="Enter your username">
 
-                    <label for="password">Password: </label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password">
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password" placeholder="Enter your password">
 
-                    <button type="submit" id="log_in" name="log_in">LogIn</button>
-
-                </form>
-            </div>
-        <?php else: ?>
-            <div class="login_container">
-                <form method="post" action="authenticate.php" class="login_form">
-
-                    <h2>Login</h2>
-
-                    <label for="user_name">Username: </label>
-                    <input type="text" id="user_name" name="user_name" placeholder="Enter your username">
-
-                    <label for="password">Password: </label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password">
-
-                    <button type="submit" id="log_in" name="log_in">LogIn</button>
-
-                </form>
-            </div>
-        <?php endif ?>
+                <button type="submit" id="log_in" name="log_in">LogIn</button>
+            </form>
+        </div>
     </main>
     <footer></footer>
 </body>
