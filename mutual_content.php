@@ -18,6 +18,7 @@
             <a href='index.php'>Homepage</a>
             <a href="log_in.php">Add Player</a>
             <a href="players.php">See Players</a>
+            <a href="log_in.php">Log In</a>
         </div>
     </header>
     <footer>
