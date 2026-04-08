@@ -1,5 +1,5 @@
 <?php
-
+require('authenticate.php');
 require "connect.php"; 
 require "mutual_content.php";
 

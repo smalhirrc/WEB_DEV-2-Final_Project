@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require "connect.php";
 
 function sanitizer($key)
@@ -54,8 +54,13 @@ if ($admin && $admin['passwords'] === $validated_password) {
         exit();
     }
 } 
-else{
+if(isset($_POST['user_name']) && isset($_POST['password']) && (!$admin || !$admin['passwords'] === $validated_password)){
     echo "Invalid username or password";
+}
+
+if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+    echo "Log in required. <a href='log_in.php'>Log In Here</a>";
+    exit();
 }
 
 ?>

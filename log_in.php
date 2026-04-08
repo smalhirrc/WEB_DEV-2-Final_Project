@@ -1,5 +1,6 @@
 <?php
 session_start();
+require('mutual_content.php');
 
 // CAME HERE FROM 'ADD PLAYER' LINK ON INDEX PAGE
 if(isset($_GET['for']) && $_GET['for'] === "add"){
@@ -13,28 +14,32 @@ if(isset($_GET['for']) && $_GET['for'] === "add"){
 }
 
 // CAME HERE FROM 'LOG IN' LINK ON INDEX PAGE
-if(isset($_GET['for']) && $_GET['for'] === "login"){
+else if(isset($_GET['for']) && $_GET['for'] === "login"){
     $directto = "homepage";
     // will come from log in link, only if not logged in
     // fill form first
 }
 
 // CAME HERE FROM 'LOG OUT' LINK ON INDEX PAGE
-if(isset($_GET['for']) && $_GET['for'] === "logout"){
+else if(isset($_GET['for']) && $_GET['for'] === "logout"){
     session_destroy();
     header("Location: index.php");
     exit();
 }
 
 // CAME HERE FROM 'EDIT PLAYER' LINK ON PLAYER'S PAGE
-if(isset($_GET['for']) && $_GET['for'] === "edit"){
+else if(isset($_GET['for']) && $_GET['for'] === "edit"){
     $directto = "edit";
+    $player_id = $_GET['player_id'];
 
     if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
-        $player_id = $_GET['player_id'];
-        header("Location: edit_player.php?player_id=$player_id");
+        header("Location: edit_player.php?for=edit&player_id=$player_id");
         exit();
     }
+}
+
+else{
+    $directto = "homepage";
 }
 
 ?>
@@ -44,9 +49,9 @@ if(isset($_GET['for']) && $_GET['for'] === "edit"){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header></header>
     <main>
         <div class="login_container">
             <form method="post" action="authenticate.php?player_id=<?=$player_id?>&directto=<?=$directto?>" class="login_form">
@@ -63,6 +68,5 @@ if(isset($_GET['for']) && $_GET['for'] === "edit"){
             </form>
         </div>
     </main>
-    <footer></footer>
 </body>
 </html>

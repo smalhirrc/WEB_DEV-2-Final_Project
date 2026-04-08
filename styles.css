@@ -127,8 +127,8 @@ main h1{
    object-fit: cover;
 }
 
-/* PLAYERS PAGE TABLE */
-.players_table{
+/* USERS TABLE ON 'MANAGE USERS AREA' PAGE */
+.users_table{
    width: 100%;
    border-collapse: collapse;
    background-color: #ffffff;
@@ -139,11 +139,11 @@ main h1{
    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-.players_table thead{
+.users_table thead{
    background-color: #f8f9fa;
 }
 
-.players_table th{
+.users_table th{
    text-align: left;
    padding: 14px 16px;
    font-size: 14px;
@@ -153,7 +153,7 @@ main h1{
    border-bottom: 1px solid #e5e5e5;
 }
 
-.players_table td{
+.users_table td{
    padding: 14px 16px;
    font-size: 14px;
    color: #555;
@@ -161,21 +161,21 @@ main h1{
    border-bottom: 1px solid #f0f0f0;
 }
 
-.players_table tbody tr:hover{
+.users_table tbody tr:hover{
    background-color: #f9fbff;
    transition: background 0.2 ease;
 }
 
-.players_table tbody tr:nth-child(even){
+.users_table tbody tr:nth-child(even){
    background-color: #fcfcfc;
 }
 
-.players-table tbody tr:last-child td{
+.users-table tbody tr:last-child td{
    border-bottom: none;
 }
 
 /* FOR MEDIA QUERY */
-/* .players_table{
+/* .users_table{
    display: block;
    overflow-x: auto; 
    white-space: nowrap;
@@ -420,7 +420,7 @@ a.active{
 }
 
 
-#back_to_players_link a{
+#go_back_link a{
    display: inline-block;
 
    padding: 10px 18px;
@@ -435,7 +435,7 @@ a.active{
    transition: background 0.2s ease;
 }
 
-#back_to_players_link a:hover{
+#go_back_link a:hover{
    background: #0056b3;
 }
 

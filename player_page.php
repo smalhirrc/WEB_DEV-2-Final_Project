@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require "connect.php";
 require "mutual_content.php";
 
@@ -36,7 +36,7 @@ catch(PDOException $e){
     <title><?=$player['player_name']?>'s Page</title>
 </head>
 <body>
-    <div id="back_to_players_link">
+    <div id="go_back_link">
         <a href='players.php'>BackToPlayers</a>
     </div>
     <div id="player_profile">
@@ -57,9 +57,11 @@ catch(PDOException $e){
             </div>
         </div>
         <?php endforeach ?>
-        <div id="edit_player_link">
-            <a href="log_in.php?for=edit&player_id=<?=$page_player_id?>">Edit Player</a>
-        </div>
+        <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+            <div id="edit_player_link">
+                <a href="log_in.php?for=edit&player_id=<?=$page_player_id?>">Edit Player</a>
+            </div>
+        <?php endif ?>
     </div>
 </body>
 </html>
