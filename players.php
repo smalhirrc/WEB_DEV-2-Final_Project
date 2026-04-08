@@ -36,7 +36,7 @@ catch(PDOException $e){
     <?php if(isset($_SESSION['logged_in'])): ?>
     <aside aria-label="Sort Players" id="players_page_aside">
         <nav id="players_sorting_bar">
-            <h2>Sort by:</h2>
+            <p>Sort by:</p>
             <ul>
                 <li>
                     <a href="sorting.php?sortby=name">Name</a>
@@ -51,7 +51,7 @@ catch(PDOException $e){
         </nav>
     </aside>
     <?php endif ?>
-    <main>
+    <main class="players_list_page_main">
         <div id="player_list">
             <?php foreach($rows as $player): ?>
                 <div class="player_row">

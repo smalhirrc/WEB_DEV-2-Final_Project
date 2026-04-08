@@ -235,6 +235,65 @@ main h1{
 }
 
 /* ALL PLAYERS LIST PAGE */
+aside#players_page_aside{
+   position: fixed;
+   left: 0;
+   top: 68px;
+   width: 220px;
+   height: 100vh;
+   background: #1f2933;
+   padding-top: 30px;
+   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#players_sorting_bar{
+   padding: 0 20px;
+}
+
+#players_sorting_bar p{
+   color: #9aa5b1;
+   font-size: 14px;
+   text-transform: uppercase;
+   letter-spacing: 1px;
+   margin-bottom: 15px;
+}
+
+#players_sorting_bar ul{
+   list-style: none;
+   padding: 0;
+   margin: 0;
+}
+
+#players_sorting_bar li{
+   margin-bottom: 8px;
+}
+
+#players_sorting_bar a{
+   display: block;
+   text-decoration: none;
+   padding: 10px 14px;
+   color: #d9e2ec;
+   border-radius: 6px;
+   font-size: 15px;
+   transition: all 0.2 ease;
+}
+
+#players_sorting_bar a:hover{
+   background: #323f4b;
+}
+
+a.active{
+   background-color: #3b82f6;
+   color: white;
+   font-weight: 600;
+}
+
+.players_list_page_main{
+   margin-left: 240px;
+   padding: 30px;
+}
+
 #player_list{
    max-width: 900px;
    margin: auto;

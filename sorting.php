@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require "connect.php";
 require "mutual_content.php";
 
@@ -24,18 +24,24 @@ try{
         $statement_sorting_query_by_name->execute();
 
         $rows = $statement_sorting_query_by_name->fetchAll(PDO::FETCH_ASSOC);
+
+        $name_class = "active";
     }
 
     if(isset($_GET['sortby']) && $_GET['sortby'] === 'createdat'){
        $statement_sorting_query_by_date_created_at->execute();
        
        $rows = $statement_sorting_query_by_date_created_at->fetchAll(PDO::FETCH_ASSOC);
+
+       $created_class = "active";
     }
 
     if(isset($_GET['sortby']) && $_GET['sortby'] === 'modifiedat'){
         $statement_sorting_query_by_date_modified->execute();
 
         $rows = $statement_sorting_query_by_date_modified->fetchAll(PDO::FETCH_ASSOC);
+
+        $modified_class = "active";
     }
 }
 catch(PDOException $e){
@@ -51,7 +57,25 @@ catch(PDOException $e){
     <title>Sorted Results</title>
 </head>
 <body>
-    <main>
+    <?php if(isset($_SESSION['logged_in'])): ?>
+    <aside aria-label="Sort Players" id="players_page_aside">
+        <nav id="players_sorting_bar">
+            <p>Sort by:</p>
+            <ul>
+                <li>
+                    <a href="sorting.php?sortby=name" class="<?=$name_class?>">Name</a>
+                </li>
+                <li>
+                    <a href="sorting.php?sortby=createdat" class="<?=$created_class?>">Date Created</a>
+                </li>
+                <li>
+                    <a href="sorting.php?sortby=modifiedat" class="<?=$modified_class?>">Date Modified</a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <?php endif ?>
+    <main class="players_list_page_main">
         <div id="player_list">
             <?php foreach($rows as $player): ?>
                 <div class="player_row">

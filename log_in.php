@@ -49,7 +49,7 @@ if(isset($_GET['for']) && $_GET['for'] === "edit"){
     <header></header>
     <main>
         <div class="login_container">
-            <form method="post" action="authenticate.php?player_id=<?=$player_id?>directto=<?=$directto?>" class="login_form">
+            <form method="post" action="authenticate.php?player_id=<?=$player_id?>&directto=<?=$directto?>" class="login_form">
 
                 <h2>Login</h2>
 
