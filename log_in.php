@@ -13,6 +13,17 @@ if(isset($_GET['for']) && $_GET['for'] === "add"){
     // else fill form below 
 }
 
+// CAME HERE FROM 'EDIT PLAYER' LINK ON PLAYER'S PAGE
+else if(isset($_GET['for']) && $_GET['for'] === "edit"){
+    $directto = "edit";
+    $player_id = $_GET['player_id'];
+
+    if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
+        header("Location: edit_player.php?for=edit&player_id=$player_id");
+        exit();
+    }
+}
+
 // CAME HERE FROM 'LOG IN' LINK ON INDEX PAGE
 else if(isset($_GET['for']) && $_GET['for'] === "login"){
     $directto = "homepage";
@@ -25,17 +36,6 @@ else if(isset($_GET['for']) && $_GET['for'] === "logout"){
     session_destroy();
     header("Location: index.php");
     exit();
-}
-
-// CAME HERE FROM 'EDIT PLAYER' LINK ON PLAYER'S PAGE
-else if(isset($_GET['for']) && $_GET['for'] === "edit"){
-    $directto = "edit";
-    $player_id = $_GET['player_id'];
-
-    if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
-        header("Location: edit_player.php?for=edit&player_id=$player_id");
-        exit();
-    }
 }
 
 else{

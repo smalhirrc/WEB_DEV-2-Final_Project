@@ -27,7 +27,7 @@ function validate_input($input){
 $validated_user_name = validate_input($sanitized_user_name);
 $validated_password = validate_input($sanitized_password);
 
-$admin_query = "SELECT user_name, passwords FROM Admins WHERE user_name = :user LIMIT 1";
+$admin_query = "SELECT user_name, passwords, user_role FROM Admins WHERE user_name = :user LIMIT 1";
 $statement_admin_query = $db->prepare($admin_query);
 $statement_admin_query->bindValue(":user", $validated_user_name);
 $statement_admin_query->execute();
@@ -37,6 +37,10 @@ $admin = $statement_admin_query->fetch(PDO::FETCH_ASSOC);
 if ($admin && $admin['passwords'] === $validated_password) {
     session_start();
     $_SESSION['logged_in'] = true;
+
+    if($admin['user_role'] === 'admin'){
+        $_SESSION['is_admin'] = true;
+    }
 
     if(isset($_GET['directto']) && $_GET['directto'] === "add"){
         header("Location: add_data.php");
@@ -54,13 +58,8 @@ if ($admin && $admin['passwords'] === $validated_password) {
         exit();
     }
 } 
-if(isset($_POST['user_name']) && isset($_POST['password']) && (!$admin || !$admin['passwords'] === $validated_password)){
-    echo "Invalid username or password";
-}
-
-if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
-    echo "Log in required. <a href='log_in.php'>Log In Here</a>";
-    exit();
+else{
+    echo 'Invalid username or password <a href="log_in.php?for=login">Try again</a>';
 }
 
 ?>

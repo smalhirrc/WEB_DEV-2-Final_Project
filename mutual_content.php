@@ -3,6 +3,8 @@ session_start();
 
 $logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 
+$is_admin = $_SESSION['is_admin'] === true;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +24,10 @@ $logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
             <a href="log_in.php?for=add">Add Player</a>
             <a href="players.php">See Players</a>
             <?php if($logged_in): ?>
-            <a href="log_in.php?for=logout">Log Out</a>
+                <?php if($is_admin): ?>
+                    <a href="manage_users_area.php">Manage Users</a>
+                <?php endif ?>
+                    <a href="log_in.php?for=logout" onClick="return confirm('Are you sure you want to logout?');">Log Out</a>
             <?php else: ?>
             <a href="log_in.php?for=login">Log In</a>
             <?php endif ?>

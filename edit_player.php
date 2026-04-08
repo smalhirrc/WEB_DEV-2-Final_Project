@@ -1,5 +1,12 @@
 <?php
-require('authenticate.php');
+
+session_start();
+
+if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+    header('Location: log_in_required.php');
+    exit();
+}
+
 require "connect.php"; 
 require "mutual_content.php";
 
