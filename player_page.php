@@ -43,7 +43,9 @@ catch(PDOException $e){
         <?php foreach($rows as $player): ?>
         <div id="player_card">
             <div id="player_profile_image">
+                <?php if($player['image_medium'] !== null): ?>
                 <img src="images/<?=$player['image_medium']?>" alt="image of player">
+                <?php endif ?>
             </div>
             <div id="player_info">
                 <p>

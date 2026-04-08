@@ -56,7 +56,9 @@ catch(PDOException $e){
             <?php foreach($rows as $player): ?>
                 <div class="player_row">
                     <div class="player_image">
+                        <?php if($player['image_thumbnail'] !== null): ?>
                         <img src="images/<?=$player['image_thumbnail']?>" alt="players image">
+                        <?php endif ?>
                     </div>
                     <p>
                         <a href="player_page.php?player_id=<?=$player['player_id']?>"><?=$player['player_name']?></a>
