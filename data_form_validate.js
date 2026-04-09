@@ -16,25 +16,12 @@ function validate(e)
                   valid_player_playing_position(),
                   valid_player_jersey_number(),
                   valid_player_profile_description()];
-    // ,
-    //               valid_team_name(),
-    //               valid_team_coach_name(),
-    //               valid_team_home_ground(),
-    //               valid_team_founded_in_year(),
-    //               valid_team_category() ,
-    //               valid_number_of_matches_played(),
-    //               valid_total_goals(),
-    //               valid_total_assists(),
-    //               valid_yellow_cards(),
-    //               valid_red_cards()
 
     let form_valid_flag = !checks.includes(false);
 
     if(!form_valid_flag){
         e.preventDefault();
     }
-
-    console.log("form_valid_flag: " + form_valid_flag);
 }
 
 function reset_all()
@@ -68,8 +55,6 @@ function load()
     player_data_form_reset_button.addEventListener("click", reset_all);
 
     let remove_image_link = document.querySelector("p#remove_image_link a");
-
-    console.log(image_set);
 
     // function will run
     if(image_set === 1){

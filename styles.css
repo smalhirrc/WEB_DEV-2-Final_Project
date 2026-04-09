@@ -396,11 +396,11 @@ a.active{
    margin: 0;
 }
 
-#edit_player_link{
+#edit_player_link, #add_user_link{
    margin-top: 20px;
 }
 
-#edit_player_link a{
+#edit_player_link a, #add_user_link a{
    display: inline-block;
 
    padding: 10px 18px;
@@ -415,7 +415,7 @@ a.active{
    transition: background 0.2s ease;
 }
 
-#edit_player_link a:hover{
+#edit_player_link a:hover, #add_user_link a:hover{
    background: #0056b3;
 }
 
@@ -467,19 +467,19 @@ a.active{
     display: none;
 }
 
-#data_form_container{
+#data_form_container, #user_update_form_container, #add_user_form_container{
    max-width: 700px;
    margin: 40px auto;
    padding: 25px;
 }
 
-#data_form_container h1{
+#data_form_container h1, #user_update_form_container h1, #add_user_form_container h1{
    text-align: center;
    margin-bottom: 20px;
    color: #222;
 }
 
-#player_data_form{
+#player_data_form, #user_update_form, #add_user_form{
    background: #ffffff;
    padding: 25px;
 
@@ -499,19 +499,19 @@ legend{
    color: #333;
 }
 
-#player_data_form ul{
+#player_data_form ul, #user_update_form ul, #add_user_form ul{
    list-style: none;
    padding: 0;
    margin: 0;
 }
 
-#player_data_form li{
+#player_data_form li, #user_update_form li, #add_user_form li{
    display: flex;
    flex-direction: column;
    margin-bottom: 16px;
 }
 
-#player_data_form label{
+#player_data_form label, #user_update_form label, #add_user_form label{
    font-size: 14px;
    margin-bottom: 16px;
 }
@@ -529,7 +529,7 @@ legend{
    transition: background 0.2s ease;
 }
 
-#player_data_form input{
+#player_data_form input, #user_update_form input, #add_user_form input{
    padding: 9px 11px;
    border: 1px solid #ccc;
    border-radius: 6px;
@@ -539,7 +539,7 @@ legend{
    transition: border 0.2s ease;
 }
 
-#player_data_form input:focus{
+#player_data_form input:focus, #user_update_form input:focus, #add_user_form input:focus{
    outline: none;
    border-color: #007bff;
 }
@@ -568,7 +568,7 @@ legend{
    background: #e2e2e2;
 }
 
-#player_data_form button{
+#player_data_form button, #user_update_form button, #add_user_form button{
     margin-top: 10px;
 }
 
