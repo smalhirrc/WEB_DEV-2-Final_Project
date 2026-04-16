@@ -181,6 +181,53 @@ main h1{
    white-space: nowrap;
 } */
 
+/* CATEGORIES TABLE ON 'MANAGE USERS AREA' PAGE */
+.categories_table{ 
+   width: 80%;
+   border-collapse: collapse;
+   background-color: #ffffff;
+   margin: auto;
+   border-radius: 10px;
+   overflow: hidden;
+   margin-top: 20px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.categories_table thead{
+   background-color: #f8f9fa;
+}
+
+.categories_table th{
+   text-align: left;
+   padding: 14px 16px;
+   font-size: 14px;
+   color: #333;
+   font-weight: 600;
+   text-align: center;
+   border-bottom: 1px solid #e5e5e5;
+}
+
+.categories_table td{
+   padding: 14px 16px;
+   font-size: 14px;
+   color: #555;
+   text-align: center;
+   border-bottom: 1px solid #f0f0f0;
+}
+
+.categories_table tbody tr:hover{
+   background-color: #f9fbff;
+   transition: background 0.2 ease;
+}
+
+.categories_table tbody tr:nth-child(even){
+   background-color: #fcfcfc;
+}
+
+.categories_table tbody tr:last-child td{
+   border-bottom: none;
+}
+
 /* LOGIN PAGE - LOGIN FORM */
 .login_container{
    width: 100%;
@@ -467,19 +514,19 @@ a.active{
     display: none;
 }
 
-#data_form_container, #user_update_form_container, #add_user_form_container{
+#data_form_container, #user_update_form_container, #add_user_form_container, #add_role_form_container{
    max-width: 700px;
    margin: 40px auto;
    padding: 25px;
 }
 
-#data_form_container h1, #user_update_form_container h1, #add_user_form_container h1{
+#data_form_container h1, #user_update_form_container h1, #add_user_form_container h1, #add_role_form_container h1{
    text-align: center;
    margin-bottom: 20px;
    color: #222;
 }
 
-#player_data_form, #user_update_form, #add_user_form{
+#player_data_form, #user_update_form, #add_user_form, #add_role_form{
    background: #ffffff;
    padding: 25px;
 
@@ -499,19 +546,19 @@ legend{
    color: #333;
 }
 
-#player_data_form ul, #user_update_form ul, #add_user_form ul{
+#player_data_form ul, #user_update_form ul, #add_user_form ul, #add_role_form ul{
    list-style: none;
    padding: 0;
    margin: 0;
 }
 
-#player_data_form li, #user_update_form li, #add_user_form li{
+#player_data_form li, #user_update_form li, #add_user_form li, #add_role_form li{
    display: flex;
    flex-direction: column;
    margin-bottom: 16px;
 }
 
-#player_data_form label, #user_update_form label, #add_user_form label{
+#player_data_form label, #user_update_form label, #add_user_form label, #add_role_form label{
    font-size: 14px;
    margin-bottom: 16px;
 }
@@ -529,7 +576,7 @@ legend{
    transition: background 0.2s ease;
 }
 
-#player_data_form input, #user_update_form input, #add_user_form input{
+#player_data_form input, #player_data_form select, #user_update_form input, #add_user_form input, #add_role_form input{
    padding: 9px 11px;
    border: 1px solid #ccc;
    border-radius: 6px;
@@ -539,7 +586,7 @@ legend{
    transition: border 0.2s ease;
 }
 
-#player_data_form input:focus, #user_update_form input:focus, #add_user_form input:focus{
+#player_data_form input:focus, #user_update_form input:focus, #add_user_form input:focus, #add_role_form input:focus{
    outline: none;
    border-color: #007bff;
 }
@@ -568,7 +615,7 @@ legend{
    background: #e2e2e2;
 }
 
-#player_data_form button, #user_update_form button, #add_user_form button{
+#player_data_form button, #user_update_form button, #add_user_form button, #add_role_form button{
     margin-top: 10px;
 }
 

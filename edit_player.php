@@ -20,7 +20,8 @@ $player_page_query = "SELECT player_id,
                              player_playing_position, 
                              player_jersey_number, 
                              player_profile_description,
-                             image_name
+                             image_name,
+                             category_id
                       FROM Players
                       WHERE player_id = :player_id";
 
@@ -39,6 +40,14 @@ try{
 catch(PDOException $e){
     echo "Error in showing values: " . $e->getMessage();
 }
+
+$player_categories_table_select = "SELECT category_id, category_name FROM Player_Categories";
+
+$statement_player_categories_table_select = $db->prepare($player_categories_table_select);
+
+$statement_player_categories_table_select->execute();
+
+$category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -95,6 +104,17 @@ catch(PDOException $e){
                             <label for="player_profile_description">Player Description: </label>
                             <input id="player_profile_description" name="player_profile_description" value="<?=$player['player_profile_description']?>">
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
+                        </li>
+                        <li>
+                            <label for="player_role">Player Role: </label>
+                            <select id="player_role" name="player_role">
+                                <option value="" <?=$player['category_id'] === null ? "selected" : ""?>></option>
+                                <?php foreach($category_rows as $category): ?>
+                                    <option value="<?= $category['category_name'] ?>" <?=$player['category_id'] === $category['category_id'] ? "selected" : ""?>><?= $category['category_name'] ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <span id="player_role_error" class="error_field">* Please select player role</span>
+                            <span>Category not found?<a href="add_role.php"> add </a></span>
                         </li>
                         <li>
                             <p class="current_image_preview">

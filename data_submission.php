@@ -1,7 +1,9 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 require 'connect.php';
 require "mutual_content.php";
 
@@ -138,6 +140,23 @@ function validate_player_profile_description($input)
 
 $validated_player_profile_description = validate_player_profile_description($sanitized_player_profile_description);
 
+// PLAYER ROLE
+$player_role = $_POST['player_role'] ? $_POST['player_role'] : "";
+
+function validate_player_role($input)
+{
+    $choices = ["Defender", "Midfielder", "Attacker"];
+
+    if(in_array($input, $choices)){
+        return $input;
+    }
+    else{
+        return false;
+    }
+}
+
+$validate_player_role = validate_player_role($player_role);
+
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
 {
@@ -231,9 +250,19 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
     }
 }
 
+$categories_select = "SELECT category_id FROM Player_Categories WHERE category_name = :player_role LIMIT 1";
+
+$statement_category_select = $db->prepare($categories_select);
+
+$statement_category_select->bindValue(":player_role", $validate_player_role);
+
+$statement_category_select->execute();
+
+$category_id = $statement_category_select->fetchColumn();
+
 // PREPARE QUERY TO INSERT PLAYER
-$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, image_thumbnail, image_medium) 
-                        VALUES        (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description, :image_name, :image_thumbnail, :image_medium)";
+$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, image_thumbnail, image_medium, category_id) 
+                        VALUES        (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description, :image_name, :image_thumbnail, :image_medium, :category_id)";
 
 $statement_player_query = $db->prepare($players_query);
 
@@ -255,7 +284,7 @@ try{
         $statement_player_query->bindValue(":image_thumbnail", $image_thumbnail_name);
         $statement_player_query->bindValue(":image_medium", $medium);
 
-        $statement_player_query->execute();
+        // $statement_player_query->execute();
     }
     else if(isset($image_name) && $image_name === false){
         header("Location: success.php?status=image_invalid");
@@ -266,8 +295,12 @@ try{
         $statement_player_query->bindValue(":image_thumbnail", null);
         $statement_player_query->bindValue(":image_medium", null);
 
-        $statement_player_query->execute();
+        // $statement_player_query->execute();
     }
+
+    $statement_player_query->bindValue(":category_id", $category_id);
+
+    $statement_player_query->execute();
 
     $db->commit();
 

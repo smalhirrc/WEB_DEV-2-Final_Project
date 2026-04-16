@@ -7,6 +7,15 @@ if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
 }
 
 require("mutual_content.php");
+require "connect.php";
+
+$player_categories_table_select = "SELECT category_id, category_name FROM Player_Categories";
+
+$statement_player_categories_table_select = $db->prepare($player_categories_table_select);
+
+$statement_player_categories_table_select->execute();
+
+$category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -58,6 +67,20 @@ require("mutual_content.php");
                         <label for="player_profile_description">Player Description: </label>
                         <input id="player_profile_description" name="player_profile_description"/>
                         <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
+                    </li>
+                    <li>
+                        <label for="player_role">Player Role: </label>
+                        <select id="player_role" name="player_role">
+                            <option value=""></option>
+                            <?php foreach($category_rows as $category): ?>
+                                <option value="<?=$category['category_name']?>"><?=$category['category_name']?></option>
+                            <?php endforeach ?>
+                            <!-- <option value="Defender">Defender</option>
+                            <option value="Midfielder">Midfielder</option>
+                            <option value="Attacker">Attacker</option> -->
+                        </select>
+                        <span id="player_role_error" class="error_field">* Please select player role</span>
+                        <span>Role not found?<a href="add_role.php"> add role</a></span>
                     </li>
                     <li>
                         <p id="upload_instruction">Upload Player Image (optional):</p>

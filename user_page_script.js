@@ -29,10 +29,9 @@ function validate_user_name(){
         document.getElementById("user_name_error").style.display = "inline-block";
 
         user_name.focus();
-        user_name.select();
     }
     else{
-        document.getElementById("user_password_error").style.display = "none";
+        document.getElementById("user_name_error").style.display = "none";
     }
 
     return valid_flag;
@@ -48,7 +47,6 @@ function validate_user_password(){
         document.getElementById("user_password_error").style.display = "inline-block";
 
         user_password.focus();
-        user_password.select();
     }
     else{
         document.getElementById("user_password_error").style.display = "none";
@@ -67,7 +65,6 @@ function validate_user_role(){
         document.getElementById("user_role_error").style.display = "inline-block";
 
         user_role.focus();
-        user_role.select();
     }
     else{
         document.getElementById("user_role_error").style.display = "none";

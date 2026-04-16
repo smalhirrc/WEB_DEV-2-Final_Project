@@ -24,6 +24,7 @@ $is_admin = $_SESSION['is_admin'] === true;
             <a href="log_in.php?for=add">Add Player</a>
             <a href="players.php">See Players</a>
             <?php if($logged_in): ?>
+                <a href="add_role.php">Manage Categories</a>
                 <?php if($is_admin): ?>
                     <a href="manage_users_area.php">Manage Users</a>
                 <?php endif ?>

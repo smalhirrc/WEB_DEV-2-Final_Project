@@ -15,6 +15,7 @@ function validate(e)
                   valid_player_weight(),
                   valid_player_playing_position(),
                   valid_player_jersey_number(),
+                  valid_player_role(),
                   valid_player_profile_description()];
 
     let form_valid_flag = !checks.includes(false);
@@ -266,196 +267,22 @@ function valid_player_profile_description()
     return valid_flag;
 }
 
-// TEAM NAME
-function valid_team_name()
+// SELECT INPUT OF PLAYER'S ROLE
+function valid_player_role()
 {
     let valid_flag = true;
-    let team_name = document.getElementById("team_name");
-// console.log(team_name.value);
-    if(team_name.value.trim() === ""){
-        valid_flag = false;
+    let player_role = document.getElementById("player_role");
 
-        document.getElementById("team_name_error").style.display = "inline-block";
+    if(player_role.value === ""){
+        valid_flag = true;
 
-        team_name.focus();
+        document.getElementById("player_role_error").style.display = "inline-block";
+
+        player_role.focus();
     }
     else{
-        document.getElementById("team_name_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TEAM COACH NAME
-function valid_team_coach_name()
-{
-    let valid_flag = true;
-    let team_coach_name = document.getElementById("team_coach_name");
-// console.log(team_coach_name.value);
-    if(team_coach_name.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("team_coach_name_error").style.display = "inline-block";
-
-        team_coach_name.focus();
-    }
-    else{
-        document.getElementById("team_coach_name_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TEAM HOME GROUND
-function valid_team_home_ground()
-{
-    let valid_flag = true;
-    let team_home_ground = document.getElementById("team_home_ground");
-// console.log(team_home_ground.value);
-    if(team_home_ground.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("team_home_ground_error").style.display = "inline-block";
-
-        team_home_ground.focus();
-    }
-    else{
-        document.getElementById("team_home_ground_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TEAM FOUNDED IN YEAR
-function valid_team_founded_in_year()
-{
-    let valid_flag = true;
-    let team_founded_in_year = document.getElementById("team_founded_in_year");
-// console.log(team_founded_in_year.value);
-    if(team_founded_in_year.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("team_founded_in_year_error").style.display = "inline-block";
-
-        team_founded_in_year.focus();
-    }
-    else{
-        document.getElementById("team_founded_in_year_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TEAM CATEGORY
-function valid_team_category()
-{
-    let valid_flag = true;
-    let team_category = document.querySelector('input[name="team_category"]:checked');
-
-    if(!team_category){
-        valid_flag = false;
-
-        document.getElementById("team_category_error").style.display = "inline-block";
-    }
-    else{
-        document.getElementById("team_category_error").style.display = "none";
+        document.getElementById("player_role_error").style.display = "none";
     }
 
-    return valid_flag;
-}
-
-// NUMBER OF MATCHES PLAYED BY PLAYER
-function valid_number_of_matches_played()
-{
-    let valid_flag = true;
-    let number_of_matches_played = document.getElementById("number_of_matches_played");
-// console.log(number_of_matches_played.value);
-    if(number_of_matches_played.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("number_of_matches_played_error").style.display = "inline-block";
-
-        number_of_matches_played.focus();
-    }
-    else{
-        document.getElementById("number_of_matches_played_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TOTAL GOALS BY PLAYER
-function valid_total_goals(){
-    let valid_flag = true;
-    let total_goals = document.getElementById("total_goals");
-// console.log(total_goals.value);
-    if(total_goals.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("total_goals_error").style.display = "inline-block";
-
-        total_goals.focus();
-    }
-    else{
-        document.getElementById("total_goals_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TOTAL ASSISTS BY PLAYER
-function valid_total_assists(){
-    let valid_flag = true;
-    let total_assists = document.getElementById("total_assists");
-// console.log(total_assists.value);
-    if(total_assists.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("total_assists_error").style.display = "inline-block";
-
-        total_assists.focus();
-    }
-    else{
-        document.getElementById("total_assists_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TOTAL YELLOW CARD TO PLAYER
-function valid_yellow_cards(){
-    let valid_flag = true;
-    let yellow_cards = document.getElementById("yellow_cards");
-// console.log(yellow_cards.value);
-    if(yellow_cards.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("yellow_cards_error").style.display = "inline-block";
-
-        yellow_cards.focus();
-    }
-    else{
-        document.getElementById("yellow_cards_error").style.display = "none";
-    }
-// console.log(valid_flag);
-    return valid_flag;
-}
-
-// TOTAL RED CARDS TO PLAYER
-function valid_red_cards(){
-    let valid_flag = true;
-    let red_cards = document.getElementById("red_cards");
-// console.log(red_cards.value);
-    if(red_cards.value.trim() === ""){
-        valid_flag = false;
-
-        document.getElementById("red_cards_error").style.display = "inline-block";
-
-        red_cards.focus();
-    }
-    else{
-        document.getElementById("red_cards_error").style.display = "none";
-    }
-// console.log(valid_flag);
     return valid_flag;
 }

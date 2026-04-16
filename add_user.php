@@ -35,7 +35,7 @@ require('mutual_content.php');
                         <input type="password" id="user_password" name="user_password" value="">
                         <span id="user_password_error" class="error_field">* User password is required.</span>
                     </li>
-                    <!-- <li>
+                    <li>
                         <label for="user_role">User Role: </label>
                         <select id="user_role" name="user_role">
                             <option value=""></option>
@@ -43,7 +43,7 @@ require('mutual_content.php');
                             <option value="user">User</option>
                         </select>
                         <span id="user_role_error" class="error_field">* Please select user role.</span>
-                    </li> -->
+                    </li>
                 </ul>
             </fieldset>
             <button type="submit" id="submit">Add</button>

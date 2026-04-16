@@ -135,12 +135,14 @@ function validate_player_profile_description($input)
 
 $validated_player_profile_description = validate_player_profile_description($sanitized_player_profile_description);
 
-// TEAM NAME
-$sanitized_team_name = sanitize_string('team_name');
+// PLAYER ROLE
+$player_role = $_POST['player_role'] ? $_POST['player_role'] : "";
 
-function validate_team_name($input)
+function validate_player_role($input)
 {
-    if(!empty(trim($input))){
+    $choices = ["Defender", "Midfielder", "Attacker"];
+
+    if(in_array($input, $choices)){
         return $input;
     }
     else{
@@ -148,131 +150,7 @@ function validate_team_name($input)
     }
 }
 
-$validated_team_name = validate_team_name($sanitized_team_name);
-
-// TEAM COACH NAME
-$sanitized_team_coach_name = sanitize_string('team_coach_name');
-
-function validate_team_coach_name($input)
-{
-    if(!empty(trim($input))){
-        return $input;
-    }
-    else{
-        return false;
-    }
-}
-
-$validated_team_coach_name = validate_team_coach_name($sanitized_team_coach_name);
-
-// TEAM FOUNDED IN YEAR
-$sanitized_team_founded_in_year = sanitize_number('team_founded_in_year');
-
-function validate_team_founded_in_year($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1900, "max_range" => 2099)));
-    }
-    return false;
-}
-
-$validated_team_founded_in_year = validate_team_founded_in_year($sanitized_team_founded_in_year);
-
-// TEAM CATEGORY
-function validate_team_category()
-{
-    if(isset($_POST['team_category'])){
-        return $_POST['team_category'];
-    }
-    return false;
-}
-
-$team_category = validate_team_category();
-
-// TEAM HOME GROUND
-$sanitized_team_home_ground = sanitize_string('team_home_ground');
-
-function validate_team_home_ground($input)
-{
-    if(!empty(trim($input))){
-        return $input;
-    }
-    else{
-        return false;
-    }
-}
-
-$validated_team_home_ground = validate_team_home_ground($sanitized_team_home_ground);
-
-// NUMBER OF MATCHES
-$sanitized_number_of_matches_played = sanitize_number('number_of_matches_played');
-
-function validate_number_of_matches_played($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-    
-    return false;
-}
-
-$validated_number_of_matches_played = validate_number_of_matches_played($sanitized_number_of_matches_played);
-
-// TOTAL GOALS
-$sanitized_total_goals = sanitize_number('total_goals');
-
-function validate_total_goals($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;
-}
-
-$validated_total_goals = validate_total_goals($sanitized_total_goals);
-
-// TOTAL ASSISTS
-$sanitized_total_assists = sanitize_number('total_assists');
-
-function validate_total_assists($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;
-}
-
-$validated_total_assists = validate_total_assists($sanitized_total_assists);
-
-// YELLOW CARDS
-$sanitized_yellow_cards = sanitize_number('yellow_cards');
-
-function validate_yellow_cards($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;   
-}
-
-$validated_yellow_cards = validate_yellow_cards($sanitized_yellow_cards);
-
-// RED CARDS
-$sanitized_red_cards = sanitize_number('red_cards');
-
-function validate_red_cards($input)
-{
-    if(trim($input) !== ""){
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-
-    return false;
-}
-
-$validated_red_cards = validate_red_cards($sanitized_red_cards);
+$validate_player_role = validate_player_role($player_role);
 
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
@@ -375,9 +253,15 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
 
 
 
+$categories_select = "SELECT category_id FROM Player_Categories WHERE category_name = :player_role LIMIT 1";
 
+$statement_category_select = $db->prepare($categories_select);
 
+$statement_category_select->bindValue(":player_role", $validate_player_role);
 
+$statement_category_select->execute();
+
+$category_id = $statement_category_select->fetchColumn();
 
 $player_id = $_GET['player_id'];
 
@@ -391,7 +275,8 @@ $players_table_update_query = "UPDATE Players
                                    player_profile_description = :player_profile_description,
                                    image_name = :image_name, 
                                    image_thumbnail = :image_thumbnail, 
-                                   image_medium = :image_medium 
+                                   image_medium = :image_medium,
+                                   category_id = :category_id 
                                WHERE player_id = :player_id";
 
 $statement_players_table_update = $db->prepare($players_table_update_query);
@@ -416,6 +301,8 @@ try{
         header("Location: success.php?status=updated_image_invalid");
         exit();
     }
+
+    $statement_players_table_update->bindValue(":category_id", $category_id); 
 
     $statement_players_table_update->bindValue(":player_id", $player_id);
 
