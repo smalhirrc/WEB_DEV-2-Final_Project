@@ -2,7 +2,9 @@
 
 session_start();
 
-if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+if ( !isset($_SESSION['logged_in']) || 
+     $_SESSION['logged_in'] !== true
+) {
     header('Location: log_in_required.php');
     exit();
 }
@@ -12,7 +14,10 @@ require "connect.php";
 
 $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : "";
 
-$player_categories_table_select = "SELECT category_name FROM Player_Categories WHERE category_id = :category_id";
+// QUERY, PREPARE, BIND, EXECUTE, FETCH
+$player_categories_table_select = "SELECT category_name 
+    FROM Player_Categories 
+    WHERE category_id = :category_id";
 
 $statement_player_categories_table_select = $db->prepare($player_categories_table_select);
 

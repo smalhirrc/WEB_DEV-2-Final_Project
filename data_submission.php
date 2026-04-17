@@ -19,7 +19,8 @@ function sanitize_string($key)
 }
 
 //SANITIZE NUMBERS
-function sanitize_number($key){
+function sanitize_number($key)
+{
     $input_value = isset($_POST[$key]) ? $_POST[$key] : "";
 
     $sanitized_number = filter_var($input_value, FILTER_SANITIZE_NUMBER_INT);
@@ -41,11 +42,12 @@ function sanitize_float($key)
 // PLAYER NAME
 $sanitized_player_name = sanitize_string('player_name');
 
-function validate_player_name($input){
-    if(!empty(trim($input))){
+function validate_player_name($input)
+{
+    if ( !empty(trim($input)) ) {
         return $input;
     }
-    else{
+    else {
         return false;
     }
 }
@@ -57,7 +59,7 @@ $sanitized_player_age = sanitize_number('player_age');
 
 function validate_player_age($input)
 {
-    if(trim($input) !== ""){
+    if ( trim($input) !== "" ) {
         return filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1, "max_range" => 100)));
     }
     return false;
@@ -70,7 +72,7 @@ $sanitized_player_height = sanitize_float('player_height');
 
 function validate_player_height($input)
 {
-    if(trim($input) !== ""){
+    if ( trim($input) !== "" ) {
         return filter_var($input, FILTER_VALIDATE_FLOAT, array("options" => array("min_range" => 100.0, "max_range" => 250.0)));
     }
     return false;
@@ -83,14 +85,13 @@ $sanitized_player_weight = sanitize_float('player_weight');
 
 function validate_player_weight($input)
 {
-    if(trim($input) !== ""){
+    if ( trim($input) !== "" ) {
         $validated_input = filter_var($input, FILTER_VALIDATE_FLOAT, array("options" => array("min_range" => 40.0, "max_range" => 170.0)));
 
-        if($validated_input !== false){
+        if ( $validated_input !== false ) {
             return round($validated_input, 2);
         }
     }
-
     return false;
 }
 
@@ -101,10 +102,10 @@ $sanitized_player_playing_position = sanitize_string('player_playing_position');
 
 function validate_playing_position($input)
 {
-    if(!empty($input)){
+    if ( !empty($input) ) {
         return $input;
     }
-    else{
+    else {
         return false;
     }
 }
@@ -116,10 +117,9 @@ $sanitized_player_jersey_number = sanitize_number('player_jersey_number');
 
 function validate_player_jersey_number($input)
 {
-    if(trim($input) !== ""){
+    if ( trim($input) !== "" ) {
         return filter_var($input, FILTER_VALIDATE_INT);
     }
-
     return false;
 }
 
@@ -130,10 +130,10 @@ $sanitized_player_profile_description = sanitize_string('player_profile_descript
 
 function validate_player_profile_description($input)
 {
-    if(!empty(trim($input))){
+    if ( !empty(trim($input)) ) {
         return $input;
     }
-    else{
+    else {
         return false;
     }
 }
@@ -147,10 +147,10 @@ function validate_player_role($input)
 {
     $choices = ["Defender", "Midfielder", "Attacker"];
 
-    if(in_array($input, $choices)){
+    if ( in_array($input, $choices) ) {
         return $input;
     }
-    else{
+    else {
         return false;
     }
 }
@@ -167,7 +167,8 @@ function file_upload_path($original_filename, $upload_subfolder_name = 'images')
     return join(DIRECTORY_SEPARATOR, $path_segments);
 }
 
-function file_is_an_image($temporary_path, $new_path){
+function file_is_an_image($temporary_path, $new_path)
+{
     $image_mime_type = getimagesize($temporary_path)['mime'];
     $image_extension = pathinfo($new_path, PATHINFO_EXTENSION);
 
@@ -180,14 +181,16 @@ function file_is_an_image($temporary_path, $new_path){
     return $mime_type_is_valid && $file_extension_is_valid;
 }
 
-if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
+if ( isset($_FILES['player_image']) && 
+     $_FILES['player_image']['error'] === 0
+) {
     $image_filename = $_FILES['player_image']['name'];
 
     $new_image_path = file_upload_path($image_filename);
 
     $temporary_image_path = $_FILES['player_image']['tmp_name'];
 
-    if(file_is_an_image($temporary_image_path, $new_image_path)){
+    if ( file_is_an_image($temporary_image_path, $new_image_path) ) {
         $image_name = $_FILES['player_image']['name'];
         $image_mime_type = getimagesize($temporary_image_path)['mime'];
 
@@ -245,12 +248,16 @@ if(isset($_FILES['player_image']) && $_FILES['player_image']['error'] === 0){
         imagedestroy($medium_src_image);
         imagedestroy($medium_dst_image);
     }
-    else{
+    else {
         $image_name = false;
     }
 }
 
-$categories_select = "SELECT category_id FROM Player_Categories WHERE category_name = :player_role LIMIT 1";
+// QUERY, PREPARE, BIND, EXECUTE, FETCH
+$categories_select = "SELECT category_id 
+    FROM Player_Categories 
+    WHERE category_name = :player_role 
+    LIMIT 1";
 
 $statement_category_select = $db->prepare($categories_select);
 
@@ -260,16 +267,16 @@ $statement_category_select->execute();
 
 $category_id = $statement_category_select->fetchColumn();
 
-// PREPARE QUERY TO INSERT PLAYER
+// QUERY, PREPARE - TO INSERT PLAYER
 $players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, image_thumbnail, image_medium, category_id) 
-                        VALUES        (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description, :image_name, :image_thumbnail, :image_medium, :category_id)";
+    VALUES (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description, :image_name, :image_thumbnail, :image_medium, :category_id)";
 
 $statement_player_query = $db->prepare($players_query);
 
-try{
+try {
     $db->beginTransaction();
 
-    // PLAYER
+    // BIND - TO INSERT PLAYER
     $statement_player_query->bindValue(':player_name', $validated_player_name);
     $statement_player_query->bindValue(':player_age', $validated_player_age);
     $statement_player_query->bindValue(':player_height', $validated_player_height);
@@ -279,27 +286,28 @@ try{
     $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
 
     // IMAGE
-    if(isset($image_name) && $image_name !== false){
+    if ( isset($image_name) && 
+         $image_name !== false
+    ) {
         $statement_player_query->bindValue(":image_name", $image_name);
         $statement_player_query->bindValue(":image_thumbnail", $image_thumbnail_name);
         $statement_player_query->bindValue(":image_medium", $medium);
-
-        // $statement_player_query->execute();
     }
-    else if(isset($image_name) && $image_name === false){
+    else if ( isset($image_name) && 
+              $image_name === false
+    ) {
         header("Location: success.php?status=image_invalid");
         exit();
     }
-    else{
+    else {
         $statement_player_query->bindValue(":image_name", null);
         $statement_player_query->bindValue(":image_thumbnail", null);
         $statement_player_query->bindValue(":image_medium", null);
-
-        // $statement_player_query->execute();
     }
 
     $statement_player_query->bindValue(":category_id", $category_id);
 
+    // EXECUTE - TO INSERT PLAYER
     $statement_player_query->execute();
 
     $db->commit();
@@ -309,8 +317,8 @@ try{
     header("Location: success.php?status=added&image=$new_image_path");
     exit();
 }
-catch (PDOException $e) {
-    if ($db->inTransaction()) {
+catch ( PDOException $e ) {
+    if ( $db->inTransaction() ) {
         $db->rollBack();
     }
     echo "Error: " . $e->getMessage();

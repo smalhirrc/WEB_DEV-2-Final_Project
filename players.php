@@ -1,26 +1,33 @@
 <?php
 
 session_start();
+
 require "mutual_content.php";
 require "connect.php";
 
-if(isset($_GET['message']) && $_GET['message'] === "deleted"){
+if ( isset($_GET['message']) && 
+     $_GET['message'] === "deleted"
+) {
     echo "Player deleted successfully";
 }
-if(isset($_GET['message']) && $_GET['message'] === "removed"){
+if ( isset($_GET['message']) && 
+     $_GET['message'] === "removed"
+) {
     echo "Image removed successfully";
 }
 
+// QUERY, PREPARE, EXECUTE, FETCH 
 $players_query = "SELECT player_id, player_name, image_thumbnail
-                  FROM Players";
+    FROM Players";
 
 $statement = $db->prepare($players_query);
 
-try{
+try {
     $statement->execute();
+
     $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 }
-catch(PDOException $e){
+catch ( PDOException $e ) {
     echo "Error is : " . $e->getMessage();
 }
 

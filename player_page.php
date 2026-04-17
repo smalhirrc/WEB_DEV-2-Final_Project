@@ -1,29 +1,27 @@
 <?php
+
 session_start();
+
 require "connect.php";
 require "mutual_content.php";
 
 $page_player_id = $_GET['player_id'];
 
-$player_page_query = "SELECT player_name, 
-                             player_age, 
-                             player_height, 
-                             player_weight, 
-                             player_playing_position, 
-                             player_jersey_number,
-                             image_medium 
-                      FROM Players
-                      WHERE player_id = :player_id";
+// QUERY, PREPARE, BIND, EXECUTE, FETCH
+$player_page_query = "SELECT player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, image_medium 
+    FROM Players
+    WHERE player_id = :player_id";
 
 $statement_player_page_query = $db->prepare($player_page_query);
 
-try{
+try {
     $statement_player_page_query->bindValue(":player_id", $page_player_id);
+
     $statement_player_page_query->execute();
 
     $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
 }
-catch(PDOException $e){
+catch ( PDOException $e ) {
     echo "Error is: " . $e->getMessage();
 }
 

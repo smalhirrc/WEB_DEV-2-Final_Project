@@ -2,7 +2,9 @@
 
 session_start();
 
-if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+if ( !isset($_SESSION['logged_in']) || 
+     $_SESSION['logged_in'] !== true
+) {
     header('Location: log_in_required.php?allowed=admin');
     exit();
 }
@@ -10,7 +12,9 @@ if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
 require('connect.php');
 require('mutual_content.php');
 
-$users_select_query = "SELECT user_name, user_id FROM Admins";
+// QUERY, PREPARE, EXECUTE, FETCH
+$users_select_query = "SELECT user_name, user_id 
+    FROM Admins";
 
 $statement_users_select_query = $db->prepare($users_select_query);
 

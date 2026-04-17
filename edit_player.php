@@ -2,7 +2,9 @@
 
 session_start();
 
-if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+if ( !isset($_SESSION['logged_in']) || 
+     $_SESSION['logged_in'] !== true
+) {
     header('Location: log_in_required.php');
     exit();
 }
@@ -12,24 +14,17 @@ require "mutual_content.php";
 
 $page_player_id = $_GET['player_id'];
 
-$player_page_query = "SELECT player_id,
-                             player_name, 
-                             player_age, 
-                             player_height, 
-                             player_weight, 
-                             player_playing_position, 
-                             player_jersey_number, 
-                             player_profile_description,
-                             image_name,
-                             category_id
+// QUERY, PREPARE
+$player_page_query = "SELECT player_id, player_name,player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, category_id
                       FROM Players
                       WHERE player_id = :player_id";
 
 $statement_player_page_query = $db->prepare($player_page_query);
 
-try{
+try {
     $db->beginTransaction();
 
+// BIND, EXECUTE, FETCH
     $statement_player_page_query->bindValue(":player_id", $page_player_id);
     $statement_player_page_query->execute();
 
@@ -37,11 +32,12 @@ try{
 
     $db->commit();
 }
-catch(PDOException $e){
+catch ( PDOException $e ) {
     echo "Error in showing values: " . $e->getMessage();
 }
 
-$player_categories_table_select = "SELECT category_id, category_name FROM Player_Categories";
+$player_categories_table_select = "SELECT category_id, category_name 
+    FROM Player_Categories";
 
 $statement_player_categories_table_select = $db->prepare($player_categories_table_select);
 

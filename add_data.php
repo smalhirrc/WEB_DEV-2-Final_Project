@@ -1,7 +1,11 @@
 <?php
+
 session_start();
 
-if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+if ( 
+    !isset($_SESSION['logged_in']) || 
+    $_SESSION['logged_in'] !== true
+) {
     header('Location: log_in_required.php');
     exit();
 }
@@ -75,9 +79,6 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                             <?php foreach($category_rows as $category): ?>
                                 <option value="<?=$category['category_name']?>"><?=$category['category_name']?></option>
                             <?php endforeach ?>
-                            <!-- <option value="Defender">Defender</option>
-                            <option value="Midfielder">Midfielder</option>
-                            <option value="Attacker">Attacker</option> -->
                         </select>
                         <span id="player_role_error" class="error_field">* Please select player role</span>
                         <span>Role not found?<a href="add_role.php"> add role</a></span>

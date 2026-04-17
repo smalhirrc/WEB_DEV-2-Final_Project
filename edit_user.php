@@ -1,7 +1,10 @@
 <?php
 
 session_start();
-if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
+
+if ( !isset($_SESSION['logged_in']) || 
+     $_SESSION['logged_in'] !== true
+) {
     header("Location: log_in_required.php");
     exit();
 }
@@ -11,16 +14,21 @@ require('mutual_content.php');
 
 $user_id = $_GET['user_id'];
 
-$select_user_query = "SELECT user_id, user_name, passwords, user_role FROM ADMINS WHERE user_id = :user_id";
+// QUERY, PREPARE, BIND, EXECUTE, FETCH
+$select_user_query = "SELECT user_id, user_name, passwords, user_role 
+    FROM ADMINS 
+    WHERE user_id = :user_id";
 
 $statement_select_user_query = $db->prepare($select_user_query);
 
-try{
+try {
     $statement_select_user_query->bindValue(":user_id", $user_id);
+
     $statement_select_user_query->execute();
+
     $rows = $statement_select_user_query->fetchAll(PDO::FETCH_ASSOC);
 }
-catch(PDOException $e){
+catch ( PDOException $e ) {
     echo 'Error: ' . $e;
 }
 

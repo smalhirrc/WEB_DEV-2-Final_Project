@@ -1,12 +1,19 @@
 <?php
+
 session_start();
-require('mutual_content.php');
+
+require "mutual_content.php";
 
 // CAME HERE FROM 'ADD PLAYER' LINK ON INDEX PAGE
-if(isset($_GET['for']) && $_GET['for'] === "add"){
+if ( isset($_GET['for']) && 
+     $_GET['for'] === "add"
+) {
     $directto = "add";
-    // if session is logged in 
-    if($_SESSION['logged_in'] && $_SESSION['logged_in'] === true){
+
+    // IF SESSION IS LOGGED IN
+    if ( $_SESSION['logged_in'] && 
+         $_SESSION['logged_in'] === true
+    ) {
         header("Location: add_data.php");
         exit();
     }
@@ -14,31 +21,39 @@ if(isset($_GET['for']) && $_GET['for'] === "add"){
 }
 
 // CAME HERE FROM 'EDIT PLAYER' LINK ON PLAYER'S PAGE
-else if(isset($_GET['for']) && $_GET['for'] === "edit"){
-    $directto = "edit";
-    $player_id = $_GET['player_id'];
+else if ( isset($_GET['for']) && 
+          $_GET['for'] === "edit"
+     ) {
+         $directto = "edit";
+         $player_id = $_GET['player_id'];
 
-    if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
+    if ( isset($_SESSION['logged_in']) && 
+         $_SESSION['logged_in'] === true
+    ) {
         header("Location: edit_player.php?for=edit&player_id=$player_id");
         exit();
     }
 }
 
 // CAME HERE FROM 'LOG IN' LINK ON INDEX PAGE
-else if(isset($_GET['for']) && $_GET['for'] === "login"){
-    $directto = "homepage";
-    // will come from log in link, only if not logged in
-    // fill form first
+else if ( isset($_GET['for']) && 
+          $_GET['for'] === "login"
+     ) {
+         $directto = "homepage";
+        // will come from log in link, only if not logged in
+        // fill form first
 }
 
 // CAME HERE FROM 'LOG OUT' LINK ON INDEX PAGE
-else if(isset($_GET['for']) && $_GET['for'] === "logout"){
-    session_destroy();
-    header("Location: index.php");
-    exit();
+else if ( isset($_GET['for']) && 
+          $_GET['for'] === "logout"
+        ) {
+            session_destroy();
+            header("Location: index.php");
+            exit();
 }
 
-else{
+else {
     $directto = "homepage";
 }
 
@@ -58,6 +73,8 @@ else{
 
                 <h2>Login</h2>
 
+                <p class="error_field" id="log_in_error">Invalid username or password</p>
+
                 <label for="user_name">Username: </label>
                 <input type="text" id="user_name" name="user_name" placeholder="Enter your username">
 
@@ -68,5 +85,8 @@ else{
             </form>
         </div>
     </main>
+    <script>
+        
+    </script>
 </body>
 </html>

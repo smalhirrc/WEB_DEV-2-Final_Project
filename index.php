@@ -16,8 +16,6 @@ require "mutual_content.php";
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-    </header>
     <main>
         <h1>Football Players</h1>
         <form id="search_form">
@@ -38,8 +36,5 @@ require "mutual_content.php";
             </div>
         </div>
     </main>
-    <footer>
-
-    </footer>
 </body>
 </html>

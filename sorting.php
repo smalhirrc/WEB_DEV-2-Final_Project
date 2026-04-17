@@ -1,26 +1,33 @@
 <?php
+
 session_start();
+
 require "connect.php";
 require "mutual_content.php";
 
-// BY NAME
-$sorting_query_by_name = "SELECT player_id, player_name, image_thumbnail FROM Players ORDER BY player_name ASC";
+// QUERY, PREPARE - SORT BY NAME
+$sorting_query_by_name = "SELECT player_id, player_name, image_thumbnail 
+    FROM Players 
+    ORDER BY player_name 
+    ASC";
 
 $statement_sorting_query_by_name = $db->prepare($sorting_query_by_name);
 
-// BY DATE CREATED
+// QUERY, PREPARE - SORT BY DATE CREATED
 $sorting_query_by_date_created_at = "SELECT player_id, player_name, image_thumbnail FROM Players ORDER BY date_created_at DESC";
 
 $statement_sorting_query_by_date_created_at = $db->prepare($sorting_query_by_date_created_at);
 
-// BY MODIFIED
+// QUERY, PREPARE - SORT BY MODIFIED
 $sorting_query_by_date_modified = "SELECT player_id, player_name, image_thumbnail FROM Players ORDER BY updated_at DESC";
 
 $statement_sorting_query_by_date_modified = $db->prepare($sorting_query_by_date_modified);
 
-try{
-
-    if(isset($_GET['sortby']) && $_GET['sortby'] === "name"){
+try {
+    if ( isset($_GET['sortby']) && 
+         $_GET['sortby'] === "name"
+    ) {
+        // EXECUTE, FETCH - SORT BY NAME
         $statement_sorting_query_by_name->execute();
 
         $rows = $statement_sorting_query_by_name->fetchAll(PDO::FETCH_ASSOC);
@@ -28,7 +35,10 @@ try{
         $name_class = "active";
     }
 
-    if(isset($_GET['sortby']) && $_GET['sortby'] === 'createdat'){
+    if ( isset($_GET['sortby']) && 
+         $_GET['sortby'] === 'createdat'
+    ) {
+       // EXECUTE, FETCH - SORT BY DATE CREATED
        $statement_sorting_query_by_date_created_at->execute();
        
        $rows = $statement_sorting_query_by_date_created_at->fetchAll(PDO::FETCH_ASSOC);
@@ -36,7 +46,10 @@ try{
        $created_class = "active";
     }
 
-    if(isset($_GET['sortby']) && $_GET['sortby'] === 'modifiedat'){
+    if ( isset($_GET['sortby']) && 
+         $_GET['sortby'] === 'modifiedat'
+    ) {
+        // EXECUTE, FETCH - SORT DATE CREATED 
         $statement_sorting_query_by_date_modified->execute();
 
         $rows = $statement_sorting_query_by_date_modified->fetchAll(PDO::FETCH_ASSOC);
@@ -44,7 +57,7 @@ try{
         $modified_class = "active";
     }
 }
-catch(PDOException $e){
+catch ( PDOException $e ) {
     echo "ERROR: " . $e;
 }
 
@@ -57,7 +70,7 @@ catch(PDOException $e){
     <title>Sorted Results</title>
 </head>
 <body>
-    <?php if(isset($_SESSION['logged_in'])): ?>
+    <?php if ( isset($_SESSION['logged_in']) ): ?>
     <aside aria-label="Sort Players" id="players_page_aside">
         <nav id="players_sorting_bar">
             <p>Sort by:</p>
@@ -77,7 +90,7 @@ catch(PDOException $e){
     <?php endif ?>
     <main class="players_list_page_main">
         <div id="player_list">
-            <?php foreach($rows as $player): ?>
+            <?php foreach ( $rows as $player ): ?>
                 <div class="player_row">
                     <div class="player_image">
                         <img src="images/<?=$player['image_thumbnail']?>" alt="players image">

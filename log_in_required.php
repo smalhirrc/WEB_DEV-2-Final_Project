@@ -1,9 +1,16 @@
 <?php
-    echo "Log in required. <a href='log_in.php?for=login'>Log In</a>";
 
-    if(isset($_GET['allowed']) && $_GET['allowed'] === 'admin'){
-        echo "Admin's log in required. <a href='log_in.php?for=login'>Log In</a>";
-    }
+require "mutual_content.php";
+
+echo "Log in required. <a href='log_in.php?for=login'>Log In</a>";
+
+    
+if ( isset($_GET['allowed']) && 
+     $_GET['allowed'] === 'admin'
+) {
+    echo "Admin's log in required. <a href='log_in.php?for=login'>Log In</a>";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -10,7 +10,7 @@ function load()
 }
 
 function validate(e){
-    if(!validate_add_category_input()){
+    if ( !validate_add_category_input() ) {
         e.preventDefault();
     }
 }
@@ -21,14 +21,16 @@ function validate_add_category_input()
 
     let category_input = document.getElementById("player_role");
 
-    if(category_input.value.trim() === "" || category_input.value.trim() === null){
+    if ( category_input.value.trim() === "" || 
+         category_input.value.trim() === null
+    ) {
         valid_flag = false;
 
         document.getElementById("add_category_input_error").style.display = "block";
 
         category_input.focus();
     }
-    else{
+    else {
         document.getElementById("add_category_input_error").style.display = "none"; 
     }
 

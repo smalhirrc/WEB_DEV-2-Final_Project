@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$logged_in = isset($_SESSION['logged_in']) && 
+    $_SESSION['logged_in'] === true;
 
 $is_admin = $_SESSION['is_admin'] === true;
 
@@ -11,7 +12,6 @@ $is_admin = $_SESSION['is_admin'] === true;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <title></title> -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
