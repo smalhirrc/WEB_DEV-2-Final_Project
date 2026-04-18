@@ -15,7 +15,14 @@ require "mutual_content.php";
 $page_player_id = $_GET['player_id'];
 
 // QUERY, PREPARE
-$player_page_query = "SELECT player_id, player_name,player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, category_id
+$player_page_query = "SELECT player_id, 
+                            player_name,
+                            player_age, 
+                            player_height, 
+                            player_weight, 
+                            player_profile_description, 
+                            image_name, 
+                            category_id
                       FROM Players
                       WHERE player_id = :player_id";
 
@@ -52,9 +59,6 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Player</title>
-    <script>
-        let image_set = <?=$image_set?>;
-    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -62,6 +66,9 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
         <h1>Update Player</h1>
         <?php foreach($rows as $player): ?>
             <?php $image_set = $player['image_name'] !== null ? 1 : 0 ?>
+            <script>
+                let image_set = <?=isset($image_set) ? $image_set : 0 ?>
+            </script>
             <form id="player_data_form" method="post" enctype="multipart/form-data" action="update_data_submission.php?player_id=<?=$player['player_id']?>">
                 <fieldset>
                     <legend><?=$player['player_name'] . "'s"?> Information</legend>
@@ -87,16 +94,6 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                             <span id="player_weight_error" class="error_field">* Player weight is required.</span>
                         </li>
                         <li>
-                            <label for="player_playing_position">Player Playing Position: </label>
-                            <input type="text" id="player_playing_position" name="player_playing_position" value="<?=$player['player_playing_position']?>">
-                            <span id="player_playing_position_error" class="error_field">* Player's playing position is required.</span>
-                        </li>
-                        <li>
-                            <label for="player_jersey_number">Player Jersey Number: </label>
-                            <input type="number" id="player_jersey_number" name="player_jersey_number" value="<?=$player['player_jersey_number']?>">
-                            <span id="player_jersey_number_error" class="error_field">* Player's jersey number is required.</span>
-                        </li>
-                        <li>
                             <label for="player_profile_description">Player Description: </label>
                             <input id="player_profile_description" name="player_profile_description" value="<?=$player['player_profile_description']?>">
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
@@ -106,7 +103,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                             <select id="player_role" name="player_role">
                                 <option value="" <?=$player['category_id'] === null ? "selected" : ""?>></option>
                                 <?php foreach($category_rows as $category): ?>
-                                    <option value="<?= $category['category_name'] ?>" <?=$player['category_id'] === $category['category_id'] ? "selected" : ""?>><?= $category['category_name'] ?></option>
+                                    <option value="<?= $category['category_id'] ?>" <?=$player['category_id'] === $category['category_id'] ? "selected" : ""?>><?= $category['category_name'] ?></option>
                                 <?php endforeach ?>
                             </select>
                             <span id="player_role_error" class="error_field">* Please select player role</span>

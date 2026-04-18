@@ -133,37 +133,37 @@ function validate_player_weight($input)
 
 $validated_player_weight = validate_player_weight($sanitized_player_weight);
 
-// PLAYER PLAYING POSITION
-$sanitized_player_playing_position = sanitize_string('player_playing_position');
+// // PLAYER PLAYING POSITION
+// $sanitized_player_playing_position = sanitize_string('player_playing_position');
 
-function validate_playing_position($input)
-{
-    if ( !empty($input) ) {
-        return $input;
-    }
-    else {
-        return false;
-    }
-}
+// function validate_playing_position($input)
+// {
+//     if ( !empty($input) ) {
+//         return $input;
+//     }
+//     else {
+//         return false;
+//     }
+// }
 
-$validated_player_playing_position = validate_playing_position($sanitized_player_playing_position);
+// $validated_player_playing_position = validate_playing_position($sanitized_player_playing_position);
 
-// PLAYER JERSEY NUMBER
-$sanitized_player_jersey_number = sanitize_number('player_jersey_number');
+// // PLAYER JERSEY NUMBER
+// $sanitized_player_jersey_number = sanitize_number('player_jersey_number');
 
-function validate_player_jersey_number($input)
-{
-    if ( trim($input) !== "" ) {
-        return filter_var(
-            $input, 
-            FILTER_VALIDATE_INT
-        );
-    }
+// function validate_player_jersey_number($input)
+// {
+//     if ( trim($input) !== "" ) {
+//         return filter_var(
+//             $input, 
+//             FILTER_VALIDATE_INT
+//         );
+//     }
 
-    return false;
-}
+//     return false;
+// }
 
-$validated_player_jersey_number = validate_player_jersey_number($sanitized_player_jersey_number);
+// $validated_player_jersey_number = validate_player_jersey_number($sanitized_player_jersey_number);
 
 // PLAYER PROFILE_DESCRIPTION
 $sanitized_player_profile_description = sanitize_string('player_profile_description');
@@ -226,10 +226,6 @@ function file_is_an_image($temporary_path, $new_path){
 
     return $mime_type_is_valid && $file_extension_is_valid;
 }
-
-$image_name = null;
-$image_thumbnail_name = null;
-$medium = null;
 
 if ( isset($_FILES['player_image']) && 
      $_FILES['player_image']['error'] === 0
@@ -298,6 +294,25 @@ if ( isset($_FILES['player_image']) &&
         $image_name = false;
     }
 }
+else {
+    $image_name = false;
+}
+
+$player_id = $_GET['player_id'];
+
+// QUERY, PREPARE
+$select_image_query = "SELECT image_name, image_thumbnail, image_medium 
+    FROM Players
+    WHERE player_id = :player_id";
+
+$statement_select_image_query = $db->prepare($select_image_query);
+
+$statement_select_image_query->bindValue("player_id", $player_id);
+
+$statement_select_image_query->execute();
+
+$previous_image = $statement_select_image_query->fetchAll(PDO::FETCH_ASSOC);
+
 
 // QUERY, PREPARE BIND, EXECUTE, FETCH - GET CATEGORY_ID
 $categories_select = "SELECT category_id 
@@ -313,16 +328,12 @@ $statement_category_select->execute();
 
 $category_id = $statement_category_select->fetchColumn();
 
-$player_id = $_GET['player_id'];
-
 // QUERY, PREPARE, BIND, EXECUTE
 $players_table_update_query = "UPDATE Players 
                                SET player_name = :player_name, 
                                    player_age = :player_age,
                                    player_height = :player_height,
                                    player_weight = :player_weight,
-                                   player_playing_position = :player_playing_position,
-                                   player_jersey_number = :player_jersey_number,
                                    player_profile_description = :player_profile_description,
                                    image_name = :image_name, 
                                    image_thumbnail = :image_thumbnail, 
@@ -339,18 +350,35 @@ try {
     $statement_players_table_update->bindValue(":player_age", $validated_player_age);
     $statement_players_table_update->bindValue(":player_height", $validated_player_height);
     $statement_players_table_update->bindValue(":player_weight", $validated_player_weight);
-    $statement_players_table_update->bindValue(":player_playing_position", $validated_player_playing_position);
-    $statement_players_table_update->bindValue(":player_jersey_number", $validated_player_jersey_number);
     $statement_players_table_update->bindValue(":player_profile_description", $validated_player_profile_description);
 
+    // IMAGE CHANGED AND OK
     if ( $image_name !== false ) {
         $statement_players_table_update->bindValue(":image_name", $image_name);
         $statement_players_table_update->bindValue(":image_thumbnail", $image_thumbnail_name);
         $statement_players_table_update->bindValue(":image_medium", $medium);
     }
+    // IMAGE NOT CHANGED OR NOT OK
+    else if ( !isset($_FILES['player_image']) ||
+        $_FILES['error'] !== 0
+    ) {
+        foreach ( $previous_image as $p_img ) {
+            $statement_players_table_update->bindValue(":image_name", $p_img['image_name']);
+            $statement_players_table_update->bindValue(":image_thumbnail", $p_img['image_thumbnail']);
+            $statement_players_table_update->bindValue(":image_medium", $p_img['image_medium']);
+        }
+    } 
+    // IMAGE NOT OK
     else {
         header("Location: success.php?status=updated_image_invalid");
         exit();
+    }
+
+    if ($category_id === null || $_POST['player_role'] === "") {
+        $category_id = null;
+    }
+    else {
+        $category_id = $_POST['player_role'];
     }
 
     $statement_players_table_update->bindValue(":category_id", $category_id); 
@@ -367,9 +395,6 @@ try {
 catch ( PDOException $e ) {
     echo "Error in updating players: " . $e->getMessage();
 }
-
-
-
 
 ?>
 <!DOCTYPE html>

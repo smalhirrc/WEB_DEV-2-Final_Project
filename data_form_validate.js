@@ -13,8 +13,6 @@ function validate(e)
     valid_player_age(),
     valid_player_height(),
     valid_player_weight(),
-    valid_player_playing_position(),
-    valid_player_jersey_number(),
     valid_player_role(),
     valid_player_profile_description()];
 
@@ -23,6 +21,7 @@ function validate(e)
     if (!form_valid_flag) {
         e.preventDefault();
     }
+    console.log(checks);
 }
 
 function reset_all() 
@@ -205,43 +204,43 @@ function valid_player_weight() {
     return valid_flag;
 }
 
-// PLAYER PLAYING POSITION
-function valid_player_playing_position() {
-    let valid_flag = true;
-    let player_playing_position = document.getElementById("player_playing_position");
-    // console.log(player_playing_position.value);
-    if (player_playing_position.value.trim() === "") {
-        valid_flag = false;
+// // PLAYER PLAYING POSITION
+// function valid_player_playing_position() {
+//     let valid_flag = true;
+//     let player_playing_position = document.getElementById("player_playing_position");
+//     // console.log(player_playing_position.value);
+//     if (player_playing_position.value.trim() === "") {
+//         valid_flag = false;
 
-        document.getElementById("player_playing_position_error").style.display = "inline-block";
+//         document.getElementById("player_playing_position_error").style.display = "inline-block";
 
-        player_playing_position.focus();
-    }
-    else {
-        document.getElementById("player_playing_position_error").style.display = "none";
-    }
-    // console.log(valid_flag);
-    return valid_flag;
-}
+//         player_playing_position.focus();
+//     }
+//     else {
+//         document.getElementById("player_playing_position_error").style.display = "none";
+//     }
+//     // console.log(valid_flag);
+//     return valid_flag;
+// }
 
-// PLAYER JERSEY NUMBER
-function valid_player_jersey_number() {
-    let valid_flag = true;
-    let player_jersey_number = document.getElementById("player_jersey_number");
-    // console.log(player_jersey_number.value);
-    if (player_jersey_number.value.trim() === "") {
-        valid_flag = false;
+// // PLAYER JERSEY NUMBER
+// function valid_player_jersey_number() {
+//     let valid_flag = true;
+//     let player_jersey_number = document.getElementById("player_jersey_number");
+//     // console.log(player_jersey_number.value);
+//     if (player_jersey_number.value.trim() === "") {
+//         valid_flag = false;
 
-        document.getElementById("player_jersey_number_error").style.display = "inline-block";
+//         document.getElementById("player_jersey_number_error").style.display = "inline-block";
 
-        player_jersey_number.focus();
-    }
-    else {
-        document.getElementById("player_jersey_number_error").style.display = "none";
-    }
-    // console.log(valid_flag);
-    return valid_flag;
-}
+//         player_jersey_number.focus();
+//     }
+//     else {
+//         document.getElementById("player_jersey_number_error").style.display = "none";
+//     }
+//     // console.log(valid_flag);
+//     return valid_flag;
+// }
 
 // PLAYER PROFILE DESCRIPTION
 function valid_player_profile_description() {
@@ -268,7 +267,7 @@ function valid_player_role() {
     let player_role = document.getElementById("player_role");
 
     if (player_role.value === "") {
-        valid_flag = true;
+        valid_flag = false;
 
         document.getElementById("player_role_error").style.display = "inline-block";
 

@@ -8,7 +8,7 @@ require "mutual_content.php";
 $page_player_id = $_GET['player_id'];
 
 // QUERY, PREPARE, BIND, EXECUTE, FETCH
-$player_page_query = "SELECT player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, image_medium 
+$player_page_query = "SELECT player_name, player_age, player_height, player_weight, image_medium 
     FROM Players
     WHERE player_id = :player_id";
 
@@ -47,8 +47,8 @@ catch ( PDOException $e ) {
             </div>
             <div id="player_info">
                 <p>
-                    <?= $player['player_name'] . " (" . $player['player_playing_position'] . ") is " .
-                    "He is " . $player['player_age'] . " years old, " .
+                    <?= $player['player_name'] .
+                    " is " . $player['player_age'] . " years old, " .
                     $player['player_height'] . " cm tall, and weighs " .
                     $player['player_weight'] . " kg."; ?>
                 </p>

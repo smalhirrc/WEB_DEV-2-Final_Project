@@ -57,7 +57,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                         <input type="number" id="player_weight" name="player_weight" step="any" min="40" max="170"/>
                         <span id="player_weight_error" class="error_field">* Player weight is required.</span>
                     </li>
-                    <li>
+                    <!-- <li>
                         <label for="player_playing_position">Player Playing Position: </label>
                         <input type="text" id="player_playing_position" name="player_playing_position"/>
                         <span id="player_playing_position_error" class="error_field">* Player's playing position is required.</span>
@@ -66,7 +66,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                         <label for="player_jersey_number">Player Jersey Number: </label>
                         <input type="number" id="player_jersey_number" name="player_jersey_number"/>
                         <span id="player_jersey_number_error" class="error_field">* Player's jersey number is required.</span>
-                    </li>
+                    </li> -->
                     <li>
                         <label for="player_profile_description">Player Description: </label>
                         <input id="player_profile_description" name="player_profile_description"/>

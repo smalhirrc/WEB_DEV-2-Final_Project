@@ -97,33 +97,33 @@ function validate_player_weight($input)
 
 $validated_player_weight = validate_player_weight($sanitized_player_weight);
 
-// PLAYER PLAYING POSITION
-$sanitized_player_playing_position = sanitize_string('player_playing_position');
+// // PLAYER PLAYING POSITION
+// $sanitized_player_playing_position = sanitize_string('player_playing_position');
 
-function validate_playing_position($input)
-{
-    if ( !empty($input) ) {
-        return $input;
-    }
-    else {
-        return false;
-    }
-}
+// function validate_playing_position($input)
+// {
+//     if ( !empty($input) ) {
+//         return $input;
+//     }
+//     else {
+//         return false;
+//     }
+// }
 
-$validated_player_playing_position = validate_playing_position($sanitized_player_playing_position);
+// $validated_player_playing_position = validate_playing_position($sanitized_player_playing_position);
 
-// PLAYER JERSEY NUMBER
-$sanitized_player_jersey_number = sanitize_number('player_jersey_number');
+// // PLAYER JERSEY NUMBER
+// $sanitized_player_jersey_number = sanitize_number('player_jersey_number');
 
-function validate_player_jersey_number($input)
-{
-    if ( trim($input) !== "" ) {
-        return filter_var($input, FILTER_VALIDATE_INT);
-    }
-    return false;
-}
+// function validate_player_jersey_number($input)
+// {
+//     if ( trim($input) !== "" ) {
+//         return filter_var($input, FILTER_VALIDATE_INT);
+//     }
+//     return false;
+// }
 
-$validated_player_jersey_number = validate_player_jersey_number($sanitized_player_jersey_number);
+// $validated_player_jersey_number = validate_player_jersey_number($sanitized_player_jersey_number);
 
 // PLAYER PROFILE_DESCRIPTION
 $sanitized_player_profile_description = sanitize_string('player_profile_description');
@@ -268,8 +268,8 @@ $statement_category_select->execute();
 $category_id = $statement_category_select->fetchColumn();
 
 // QUERY, PREPARE - TO INSERT PLAYER
-$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_playing_position, player_jersey_number, player_profile_description, image_name, image_thumbnail, image_medium, category_id) 
-    VALUES (:player_name, :player_age, :player_height, :player_weight, :player_playing_position, :player_jersey_number, :player_profile_description, :image_name, :image_thumbnail, :image_medium, :category_id)";
+$players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_profile_description, image_name, image_thumbnail, image_medium, category_id) 
+    VALUES (:player_name, :player_age, :player_height, :player_weight, :player_profile_description, :image_name, :image_thumbnail, :image_medium, :category_id)";
 
 $statement_player_query = $db->prepare($players_query);
 
@@ -281,8 +281,6 @@ try {
     $statement_player_query->bindValue(':player_age', $validated_player_age);
     $statement_player_query->bindValue(':player_height', $validated_player_height);
     $statement_player_query->bindValue(':player_weight', $validated_player_weight);
-    $statement_player_query->bindValue(':player_playing_position', $validated_player_playing_position);
-    $statement_player_query->bindValue(':player_jersey_number', $validated_player_jersey_number);
     $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
 
     // IMAGE
