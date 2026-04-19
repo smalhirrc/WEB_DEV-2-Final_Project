@@ -514,6 +514,25 @@ a.active{
     display: none;
 }
 
+#error_container {
+    margin: 20px 0;
+}
+
+#errors {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4d4d;
+    border-left: 5px solid #cc0000;
+    padding: 15px 20px;
+    border-radius: 6px;
+}
+
+.error_fields {
+    color: #990000;
+    font-size: 14px;
+    margin: 6px 0;
+    font-family: Arial, sans-serif;
+}
+
 #data_form_container, #user_update_form_container, #add_user_form_container, #add_role_form_container{
    max-width: 700px;
    margin: 40px auto;

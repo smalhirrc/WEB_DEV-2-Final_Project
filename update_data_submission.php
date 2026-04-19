@@ -133,38 +133,6 @@ function validate_player_weight($input)
 
 $validated_player_weight = validate_player_weight($sanitized_player_weight);
 
-// // PLAYER PLAYING POSITION
-// $sanitized_player_playing_position = sanitize_string('player_playing_position');
-
-// function validate_playing_position($input)
-// {
-//     if ( !empty($input) ) {
-//         return $input;
-//     }
-//     else {
-//         return false;
-//     }
-// }
-
-// $validated_player_playing_position = validate_playing_position($sanitized_player_playing_position);
-
-// // PLAYER JERSEY NUMBER
-// $sanitized_player_jersey_number = sanitize_number('player_jersey_number');
-
-// function validate_player_jersey_number($input)
-// {
-//     if ( trim($input) !== "" ) {
-//         return filter_var(
-//             $input, 
-//             FILTER_VALIDATE_INT
-//         );
-//     }
-
-//     return false;
-// }
-
-// $validated_player_jersey_number = validate_player_jersey_number($sanitized_player_jersey_number);
-
 // PLAYER PROFILE_DESCRIPTION
 $sanitized_player_profile_description = sanitize_string('player_profile_description');
 
@@ -183,19 +151,19 @@ $validated_player_profile_description = validate_player_profile_description($san
 // PLAYER ROLE
 $player_role = $_POST['player_role'] ? $_POST['player_role'] : "";
 
-function validate_player_role($input)
-{
-    $choices = ["Defender", "Midfielder", "Attacker"];
+// function validate_player_role($input)
+// {
+//     $choices = ["Defender", "Midfielder", "Attacker"];
 
-    if ( in_array($input, $choices) ) {
-        return $input;
-    }
-    else {
-        return false;
-    }
-}
+//     if ( in_array($input, $choices) ) {
+//         return $input;
+//     }
+//     else {
+//         return false;
+//     }
+// }
 
-$validate_player_role = validate_player_role($player_role);
+// $validate_player_role = validate_player_role($player_role);
 
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
@@ -299,6 +267,7 @@ else {
 }
 
 $player_id = $_GET['player_id'];
+$category_id = $_POST['player_role'];
 
 // QUERY, PREPARE
 $select_image_query = "SELECT image_name, image_thumbnail, image_medium 
@@ -312,21 +281,6 @@ $statement_select_image_query->bindValue("player_id", $player_id);
 $statement_select_image_query->execute();
 
 $previous_image = $statement_select_image_query->fetchAll(PDO::FETCH_ASSOC);
-
-
-// QUERY, PREPARE BIND, EXECUTE, FETCH - GET CATEGORY_ID
-$categories_select = "SELECT category_id 
-    FROM Player_Categories 
-    WHERE category_name = :player_role 
-    LIMIT 1";
-
-$statement_category_select = $db->prepare($categories_select);
-
-$statement_category_select->bindValue(":player_role", $validate_player_role);
-
-$statement_category_select->execute();
-
-$category_id = $statement_category_select->fetchColumn();
 
 // QUERY, PREPARE, BIND, EXECUTE
 $players_table_update_query = "UPDATE Players 
@@ -374,13 +328,6 @@ try {
         exit();
     }
 
-    if ($category_id === null || $_POST['player_role'] === "") {
-        $category_id = null;
-    }
-    else {
-        $category_id = $_POST['player_role'];
-    }
-
     $statement_players_table_update->bindValue(":category_id", $category_id); 
 
     $statement_players_table_update->bindValue(":player_id", $player_id);
@@ -397,14 +344,3 @@ catch ( PDOException $e ) {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>

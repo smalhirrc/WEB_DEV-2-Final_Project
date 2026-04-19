@@ -97,34 +97,6 @@ function validate_player_weight($input)
 
 $validated_player_weight = validate_player_weight($sanitized_player_weight);
 
-// // PLAYER PLAYING POSITION
-// $sanitized_player_playing_position = sanitize_string('player_playing_position');
-
-// function validate_playing_position($input)
-// {
-//     if ( !empty($input) ) {
-//         return $input;
-//     }
-//     else {
-//         return false;
-//     }
-// }
-
-// $validated_player_playing_position = validate_playing_position($sanitized_player_playing_position);
-
-// // PLAYER JERSEY NUMBER
-// $sanitized_player_jersey_number = sanitize_number('player_jersey_number');
-
-// function validate_player_jersey_number($input)
-// {
-//     if ( trim($input) !== "" ) {
-//         return filter_var($input, FILTER_VALIDATE_INT);
-//     }
-//     return false;
-// }
-
-// $validated_player_jersey_number = validate_player_jersey_number($sanitized_player_jersey_number);
-
 // PLAYER PROFILE_DESCRIPTION
 $sanitized_player_profile_description = sanitize_string('player_profile_description');
 
@@ -139,23 +111,6 @@ function validate_player_profile_description($input)
 }
 
 $validated_player_profile_description = validate_player_profile_description($sanitized_player_profile_description);
-
-// PLAYER ROLE
-$player_role = $_POST['player_role'] ? $_POST['player_role'] : "";
-
-function validate_player_role($input)
-{
-    $choices = ["Defender", "Midfielder", "Attacker"];
-
-    if ( in_array($input, $choices) ) {
-        return $input;
-    }
-    else {
-        return false;
-    }
-}
-
-$validate_player_role = validate_player_role($player_role);
 
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
@@ -253,19 +208,7 @@ if ( isset($_FILES['player_image']) &&
     }
 }
 
-// QUERY, PREPARE, BIND, EXECUTE, FETCH
-$categories_select = "SELECT category_id 
-    FROM Player_Categories 
-    WHERE category_name = :player_role 
-    LIMIT 1";
-
-$statement_category_select = $db->prepare($categories_select);
-
-$statement_category_select->bindValue(":player_role", $validate_player_role);
-
-$statement_category_select->execute();
-
-$category_id = $statement_category_select->fetchColumn();
+$category_id = $_POST['player_role'] ? $_POST['player_role'] : "";
 
 // QUERY, PREPARE - TO INSERT PLAYER
 $players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_profile_description, image_name, image_thumbnail, image_medium, category_id) 
@@ -273,53 +216,92 @@ $players_query = "INSERT INTO Players (player_name, player_age, player_height, p
 
 $statement_player_query = $db->prepare($players_query);
 
-try {
-    $db->beginTransaction();
+$checks = [validate_player_name($sanitized_player_name), 
+    validate_player_age($sanitized_player_age), 
+    validate_player_height($sanitized_player_height), 
+    validate_player_weight($sanitized_player_weight), 
+    validate_player_profile_description($sanitized_player_profile_description)];
 
-    // BIND - TO INSERT PLAYER
-    $statement_player_query->bindValue(':player_name', $validated_player_name);
-    $statement_player_query->bindValue(':player_age', $validated_player_age);
-    $statement_player_query->bindValue(':player_height', $validated_player_height);
-    $statement_player_query->bindValue(':player_weight', $validated_player_weight);
-    $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
 
-    // IMAGE
-    if ( isset($image_name) && 
-         $image_name !== false
-    ) {
-        $statement_player_query->bindValue(":image_name", $image_name);
-        $statement_player_query->bindValue(":image_thumbnail", $image_thumbnail_name);
-        $statement_player_query->bindValue(":image_medium", $medium);
-    }
-    else if ( isset($image_name) && 
-              $image_name === false
-    ) {
-        header("Location: success.php?status=image_invalid");
+if (!in_array(false, $checks)) {
+    try {
+        $db->beginTransaction();
+
+        // BIND - TO INSERT PLAYER
+        $statement_player_query->bindValue(':player_name', $validated_player_name);
+        $statement_player_query->bindValue(':player_age', $validated_player_age);
+        $statement_player_query->bindValue(':player_height', $validated_player_height);
+        $statement_player_query->bindValue(':player_weight', $validated_player_weight);
+        $statement_player_query->bindValue(':player_profile_description', $validated_player_profile_description);
+
+        // IMAGE
+        if ( isset($image_name) && 
+            $image_name !== false
+        ) {
+            $statement_player_query->bindValue(":image_name", $image_name);
+            $statement_player_query->bindValue(":image_thumbnail", $image_thumbnail_name);
+            $statement_player_query->bindValue(":image_medium", $medium);
+        }
+        else if ( isset($image_name) && 
+                $image_name === false
+        ) {
+            header("Location: success.php?status=image_invalid");
+            exit();
+        }
+        else {
+            $statement_player_query->bindValue(":image_name", null);
+            $statement_player_query->bindValue(":image_thumbnail", null);
+            $statement_player_query->bindValue(":image_medium", null);
+        }
+
+        $statement_player_query->bindValue(":category_id", $category_id);
+
+        // EXECUTE - TO INSERT PLAYER
+        $statement_player_query->execute();
+
+        $db->commit();
+
+        echo "Successfully saved Player!";
+
+        header("Location: success.php?status=added");
         exit();
     }
-    else {
-        $statement_player_query->bindValue(":image_name", null);
-        $statement_player_query->bindValue(":image_thumbnail", null);
-        $statement_player_query->bindValue(":image_medium", null);
+    catch ( PDOException $e ) {
+        if ( $db->inTransaction() ) {
+            $db->rollBack();
+        }
+        echo "Error: " . $e->getMessage();
     }
-
-    $statement_player_query->bindValue(":category_id", $category_id);
-
-    // EXECUTE - TO INSERT PLAYER
-    $statement_player_query->execute();
-
-    $db->commit();
-
-    echo "Successfully saved Player!";
-
-    header("Location: success.php?status=added&image=$new_image_path");
-    exit();
 }
-catch ( PDOException $e ) {
-    if ( $db->inTransaction() ) {
-        $db->rollBack();
+else {
+$player_name_error_message = validate_player_name($sanitized_player_name) === false ? "Player Name is invalid" : ""; 
+// echo $player_name_error_message; 
+
+$player_age_error_message = validate_player_age($sanitized_player_age) === false ? "Player Age is invalid" : "";
+// echo $player_age_error_message;
+
+$player_height_error_message = validate_player_height($sanitized_player_height) === false ? "Player Height is invalid" : "";
+// echo $player_height_error_message;
+
+$player_weight_error_message = validate_player_weight($sanitized_player_weight) === false ? "Player Weight is invalid" : "";
+// echo $player_weight_error_message;
+
+$player_profile_description_error_message = validate_player_profile_description($sanitized_player_profile_description) === false ? "Player Profile Description is invalid" : "";
+// echo $player_profile_description_error_message;
+
+$error_checks = [$player_name_error_message, 
+    $player_age_error_message, 
+    $player_height_error_message, 
+    $player_weight_error_message, 
+    $player_profile_description_error_message];
+
+$errors = [];
+
+foreach($error_checks as $check){
+    if($check !== ""){
+        $errors[] = $check;
     }
-    echo "Error: " . $e->getMessage();
+}
 }
 
 ?>
@@ -328,13 +310,15 @@ catch ( PDOException $e ) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Data Submission</title>
 </head>
 <body>
-    <header>
-
-    </header>
-    <main></main>
-    <footer></footer>
+    <div id="error_container">
+        <div id="errors">
+            <?php foreach($errors as $error_messages): ?>
+                <p class="error_fields">* <?=$error_messages?></p>
+            <?php endforeach ?>
+        </div>
+    </div>
 </body>
 </html>
