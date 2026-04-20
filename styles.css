@@ -533,6 +533,13 @@ a.active{
     font-family: Arial, sans-serif;
 }
 
+.success{
+    color: #034a05;
+    font-size: 18px;
+    margin: 6px 0;
+    font-family: Arial, sans-serif;
+}
+
 #data_form_container, #user_update_form_container, #add_user_form_container, #add_role_form_container{
    max-width: 700px;
    margin: 40px auto;
