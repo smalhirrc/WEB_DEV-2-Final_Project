@@ -12,8 +12,9 @@ if ( !isset($_SESSION['logged_in']) ||
 require('connect.php');
 require('mutual_content.php');
 
-$sanitized_user_id = filter_var(
-    $_GET['user_id'],
+$sanitized_user_id = filter_input(
+    INPUT_GET,
+    'user_id',
     FILTER_SANITIZE_NUMBER_INT
 );
 
@@ -135,12 +136,12 @@ if ( $_POST ) {
                     <ul>
                         <li>
                             <label for="user_name">User Name: </label>
-                            <input type="text" id="user_name" name="user_name" value="<?=$user['user_name']?>">
+                            <input type="text" id="user_name" name="user_name" value="<?=htmlspecialchars($user['user_name'])?>">
                             <span id="user_name_error" class="error_field">* User name is required.</span>
                         </li>
                         <li>
                             <label for="user_password">User Password: </label>
-                            <input type="password" id="user_password" name="user_password" value="<?=$user['passwords']?>">
+                            <input type="password" id="user_password" name="user_password" value="">
                             <span id="user_password_error" class="error_field">* User password is required.</span>
                         </li>
                         <li>

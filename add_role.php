@@ -39,10 +39,11 @@ function sanitize_string($key)
 
 function validate_player_role($input)
 {
-    if ( trim($input) === "" ) {
-        return false;
+    if ( trim($input) !== "" && preg_match('/^[a-zA-Z ]+$/', trim($input)) ) {
+        return $input;
     }
-    return $input;
+
+    return false;
 }
 
 $sanitized_player_role = sanitize_string('player_role');

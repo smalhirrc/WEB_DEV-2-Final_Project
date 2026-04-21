@@ -10,9 +10,16 @@ if (
     exit();
 }
 
+
+
+
 require("mutual_content.php");
 require "connect.php";
 
+
+
+
+// SELECT FOR DROPDOWN OPTIONS AND VALUES
 $player_categories_table_select = "SELECT category_id, category_name FROM Player_Categories";
 
 $statement_player_categories_table_select = $db->prepare($player_categories_table_select);
@@ -20,6 +27,9 @@ $statement_player_categories_table_select = $db->prepare($player_categories_tabl
 $statement_player_categories_table_select->execute();
 
 $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 
 function sanitize_string($key)
 {
@@ -50,13 +60,16 @@ function sanitize_float($key)
     return $sanitized_float;
 }
 
+
+
+
 // VALIDATE SANITIZED INPUTS
 // PLAYER NAME
 $sanitized_player_name = sanitize_string('player_name');
 
 function validate_player_name($input)
 {
-    if ( !empty(trim($input)) ) {
+    if ( !empty(trim($input)) && preg_match('/^[a-zA-Z\s]+$/', $input) ) {
         return $input;
     }
     else {
@@ -72,7 +85,16 @@ $sanitized_player_age = sanitize_number('player_age');
 function validate_player_age($input)
 {
     if ( trim($input) !== "" ) {
-        return filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1, "max_range" => 100)));
+        return filter_var(
+            $input, 
+            FILTER_VALIDATE_INT, 
+            array(
+                "options" => array(
+                    "min_range" => 1, 
+                    "max_range" => 100
+                )
+            )
+        );
     }
     return false;
 }
@@ -85,7 +107,16 @@ $sanitized_player_height = sanitize_float('player_height');
 function validate_player_height($input)
 {
     if ( trim($input) !== "" ) {
-        return filter_var($input, FILTER_VALIDATE_FLOAT, array("options" => array("min_range" => 100.0, "max_range" => 250.0)));
+        return filter_var(
+            $input, 
+            FILTER_VALIDATE_FLOAT, 
+            array(
+                "options" => array(
+                    "min_range" => 100.0, 
+                    "max_range" => 250.0
+                )
+            )
+        );
     }
     return false;
 }
@@ -98,12 +129,22 @@ $sanitized_player_weight = sanitize_float('player_weight');
 function validate_player_weight($input)
 {
     if ( trim($input) !== "" ) {
-        $validated_input = filter_var($input, FILTER_VALIDATE_FLOAT, array("options" => array("min_range" => 40.0, "max_range" => 170.0)));
+        $validated_input = filter_var(
+            $input, 
+            FILTER_VALIDATE_FLOAT, 
+            array(
+                "options" => array(
+                    "min_range" => 40.0, 
+                    "max_range" => 170.0
+                )
+            )
+        );
 
         if ( $validated_input !== false ) {
             return round($validated_input, 2);
         }
     }
+
     return false;
 }
 
@@ -114,7 +155,8 @@ $sanitized_player_profile_description = sanitize_string('player_profile_descript
 
 function validate_player_profile_description($input)
 {
-    if ( !empty(trim($input)) ) {
+    if ( !empty(trim($input)) && preg_match('/^[a-zA-Z0-9 !@%*()+=?.,-]+$/', trim($input)) ) {
+                                            // '/^[a-zA-Z0-9 !@%*()+=?.,&"\'-]+$/'
         return $input;
     }
     else {
@@ -123,6 +165,17 @@ function validate_player_profile_description($input)
 }
 
 $validated_player_profile_description = validate_player_profile_description($sanitized_player_profile_description);
+
+// PLAYER ROLE
+function validate_player_role()
+{
+    if ( isset($_POST['player_role']) && $_POST['player_role'] === "" ){
+        return false;
+    }
+    return filter_input(INPUT_POST, 'player_role', FILTER_VALIDATE_INT);
+}
+
+$validated_player_role = validate_player_role();
 
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
@@ -219,8 +272,14 @@ if ( isset($_FILES['player_image']) &&
         $image_name = false;
     }
 }
+else {
+    $image_name = "not_set";
+}
 
-$category_id = $_POST['player_role'] ? $_POST['player_role'] : null;
+
+
+
+// $category_id = $_POST['player_role'] ? $_POST['player_role'] : null;
 
 // QUERY, PREPARE - TO INSERT PLAYER
 $players_query = "INSERT INTO Players (player_name, player_age, player_height, player_weight, player_profile_description, image_name, image_thumbnail, image_medium, category_id) 
@@ -232,10 +291,13 @@ $checks = [validate_player_name($sanitized_player_name),
     validate_player_age($sanitized_player_age), 
     validate_player_height($sanitized_player_height), 
     validate_player_weight($sanitized_player_weight), 
-    validate_player_profile_description($sanitized_player_profile_description)];
+    validate_player_profile_description($sanitized_player_profile_description),
+    validate_player_role(),
+    $image_name
+];
 
 
-if (!in_array(false, $checks)) {
+if (!in_array(false, $checks) && (isset($image_name) && $image_name !== false) ) {
     try {
         $db->beginTransaction();
 
@@ -254,19 +316,19 @@ if (!in_array(false, $checks)) {
             $statement_player_query->bindValue(":image_thumbnail", $image_thumbnail_name);
             $statement_player_query->bindValue(":image_medium", $medium);
         }
-        else if ( isset($image_name) && 
-                $image_name === false
-        ) {
-            header("Location: success.php?status=image_invalid");
-            exit();
-        }
+        // else if ( isset($image_name) && 
+        //         $image_name === false
+        // ) {
+        //     header("Location: success.php?status=image_invalid");
+        //     exit();
+        // }
         else {
             $statement_player_query->bindValue(":image_name", null);
             $statement_player_query->bindValue(":image_thumbnail", null);
             $statement_player_query->bindValue(":image_medium", null);
         }
 
-        $statement_player_query->bindValue(":category_id", $category_id);
+        $statement_player_query->bindValue(":category_id", $validated_player_role);
 
         // EXECUTE - TO INSERT PLAYER
         $statement_player_query->execute();
@@ -296,11 +358,18 @@ $player_weight_error_message = validate_player_weight($sanitized_player_weight) 
 
 $player_profile_description_error_message = validate_player_profile_description($sanitized_player_profile_description) === false ? "Player Profile Description is invalid" : "";
 
+$player_role_error_message = validate_player_role() === false ? "Please select player role" : "";
+
+$image_error_message = $image_name === false ? "Please select valid image" : "" ;
+
 $error_checks = [$player_name_error_message, 
     $player_age_error_message, 
     $player_height_error_message, 
     $player_weight_error_message, 
-    $player_profile_description_error_message];
+    $player_profile_description_error_message,
+    $player_role_error_message,
+    $image_error_message
+];
 
 $errors = [];
 
@@ -321,6 +390,10 @@ foreach($error_checks as $check){
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+
+
+
     <?php if (count($errors) !== 0 && $_POST): ?>
     <div id="error_container">
         <div id="errors">
@@ -330,6 +403,10 @@ foreach($error_checks as $check){
         </div>
     </div>
     <?php endif ?>
+
+
+
+
     <div id="data_form_container">
         <h1>Add Player</h1>
         <form id="player_data_form" method="post" action="" enctype="multipart/form-data">
@@ -338,27 +415,27 @@ foreach($error_checks as $check){
                 <ul>
                     <li>
                         <label for="player_name">Player Name: </label>
-                        <input type="text" id="player_name" name="player_name" value="<?=$_POST['player_name']?>"/>
+                        <input type="text" id="player_name" name="player_name" value="<?=htmlspecialchars($_POST['player_name'])?>"/>
                         <span id="player_name_error" class="error_field">* Player name is required.</span>
                     </li>
                     <li>
                         <label for="player_age">Player Age: </label>
-                        <input type="number" id="player_age" name="player_age" min="1" max="100" value="<?=$_POST['player_age']?>"/>
+                        <input type="number" id="player_age" name="player_age" min="1" max="100" value="<?=htmlspecialchars($_POST['player_age'])?>"/>
                         <span id="player_age_error" class="error_field">* Valid player age is required.</span>
                     </li>
                     <li>
                         <label for="player_height">Player Height (cm): </label>
-                        <input type="number" id="player_height" name="player_height" step="any" min="100" max="250" value="<?=$_POST['player_height']?>"/>
+                        <input type="number" id="player_height" name="player_height" step="any" min="100" max="250" value="<?=htmlspecialchars($_POST['player_height'])?>"/>
                         <span id="player_height_error" class="error_field">* Player height is required.</span>
                     </li>
                     <li>
                         <label for="player_weight">Player Weight (kg): </label>
-                        <input type="number" id="player_weight" name="player_weight" step="any" min="40" max="170" value="<?=$_POST['player_weight']?>"/>
+                        <input type="number" id="player_weight" name="player_weight" step="any" min="40" max="170" value="<?=htmlspecialchars($_POST['player_weight'])?>"/>
                         <span id="player_weight_error" class="error_field">* Player weight is required.</span>
                     </li>
                     <li>
                         <label for="player_profile_description">Player Description: </label>
-                        <input id="player_profile_description" name="player_profile_description" value="<?=$_POST['player_profile_description']?>"/>
+                        <input id="player_profile_description" name="player_profile_description" value="<?=htmlspecialchars($_POST['player_profile_description'])?>"/>
                         <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
                     </li>
                     <li>

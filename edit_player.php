@@ -9,10 +9,79 @@ if ( !isset($_SESSION['logged_in']) ||
     exit();
 }
 
+
+
+
 require "connect.php"; 
 require "mutual_content.php";
 
-// **********************************************************
+
+
+
+// SELECT FOR DISPLAYING CURRENT INFORMATION
+$player_id = filter_input(INPUT_GET, 'player_id', FILTER_VALIDATE_INT);
+
+// QUERY, PREPARE
+$player_page_query = "SELECT player_id, 
+                            player_name,
+                            player_age, 
+                            player_height, 
+                            player_weight, 
+                            player_profile_description, 
+                            image_name, 
+                            category_id
+                      FROM Players
+                      WHERE player_id = :player_id";
+
+$statement_player_page_query = $db->prepare($player_page_query);
+
+try {
+    $db->beginTransaction();
+
+// BIND, EXECUTE, FETCH
+    $statement_player_page_query->bindValue(":player_id", $player_id);
+    $statement_player_page_query->execute();
+
+    $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
+
+    $db->commit();
+}
+catch ( PDOException $e ) {
+    echo "Error in showing values: " . $e->getMessage();
+}
+
+
+
+
+// SELECT FOR DROPDOWN OPTIONS AND VALUES
+$player_categories_table_select = "SELECT category_id, category_name 
+    FROM Player_Categories";
+
+$statement_player_categories_table_select = $db->prepare($player_categories_table_select);
+
+$statement_player_categories_table_select->execute();
+
+$category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+// QUERY, PREPARE
+$select_image_query = "SELECT image_name, image_thumbnail, image_medium 
+    FROM Players
+    WHERE player_id = :player_id";
+
+$statement_select_image_query = $db->prepare($select_image_query);
+
+$statement_select_image_query->bindValue("player_id", $player_id);
+
+$statement_select_image_query->execute();
+
+$previous_image = $statement_select_image_query->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
 // SANITIZATION FUNCTIONS
 // SANITIZE STRINGS
 function sanitize_string($key)
@@ -52,13 +121,16 @@ function sanitize_float($key)
     return $sanitized_float;
 }
 
+
+
+
 // VALIDATE SANITIZED INPUTS
 // PLAYER NAME
 $sanitized_player_name = sanitize_string('player_name');
 
 function validate_player_name($input)
 {
-    if ( !empty(trim($input)) ) {
+    if ( !empty(trim($input)) && preg_match('/^[a-zA-Z\s]+$/', $input) ) {
         return $input;
     }
     else {
@@ -132,10 +204,7 @@ function validate_player_weight($input)
         );
 
         if ( $validated_input !== false ) {
-            return round(
-                $validated_input, 
-                2
-            );
+            return round($validated_input, 2);
         }
     }
 
@@ -149,7 +218,7 @@ $sanitized_player_profile_description = sanitize_string('player_profile_descript
 
 function validate_player_profile_description($input)
 {
-    if ( !empty(trim($input)) ) {
+    if ( !empty(trim($input)) && preg_match('/^[a-zA-Z0-9 !@%*()+=?.,-]+$/', trim($input))  ) {
         return $input;
     }
     else {
@@ -158,6 +227,18 @@ function validate_player_profile_description($input)
 }
 
 $validated_player_profile_description = validate_player_profile_description($sanitized_player_profile_description);
+
+// PLAYER ROLE
+function validate_player_role()
+{
+    if ( isset($_POST['player_role']) && $_POST['player_role'] === "" ){
+        return false;
+    }
+    $category_id = $_POST['player_role'];
+    return $category_id;
+}
+
+$validated_player_role = validate_player_role();
 
 // PLAYER IMAGE FILE UPLOAD CHECKING
 function file_upload_path($original_filename, $upload_subfolder_name = 'images')
@@ -257,24 +338,11 @@ if ( isset($_FILES['player_image']) &&
     }
 }
 else {
-    $image_name = false;
+    $image_name = "not_set";
 }
 
-$player_id = $_GET['player_id'];
-$category_id = $_POST['player_role'] ? $_POST['player_role'] : null;
 
-// QUERY, PREPARE
-$select_image_query = "SELECT image_name, image_thumbnail, image_medium 
-    FROM Players
-    WHERE player_id = :player_id";
 
-$statement_select_image_query = $db->prepare($select_image_query);
-
-$statement_select_image_query->bindValue("player_id", $player_id);
-
-$statement_select_image_query->execute();
-
-$previous_image = $statement_select_image_query->fetchAll(PDO::FETCH_ASSOC);
 
 // QUERY, PREPARE, BIND, EXECUTE
 $players_table_update_query = "UPDATE Players 
@@ -291,14 +359,23 @@ $players_table_update_query = "UPDATE Players
 
 $statement_players_table_update = $db->prepare($players_table_update_query);
 
+
+
+
 $checks = [validate_player_name($sanitized_player_name), 
     validate_player_age($sanitized_player_age), 
     validate_player_height($sanitized_player_height), 
     validate_player_weight($sanitized_player_weight), 
-    validate_player_profile_description($sanitized_player_profile_description)];
+    validate_player_profile_description($sanitized_player_profile_description),
+    validate_player_role(),
+    $image_name
+];
+
+
+
 
 if($_POST){
-    if(!in_array(false, $checks)){
+    if(!in_array(false, $checks)  && (isset($image_name) && $image_name !== false) ){
     try {
         $db->beginTransaction();
 
@@ -309,15 +386,14 @@ if($_POST){
         $statement_players_table_update->bindValue(":player_profile_description", $validated_player_profile_description);
 
         // IMAGE CHANGED AND OK
-        if ( $image_name !== false ) {
+        if ( $image_name !== "not_set" ) {
             $statement_players_table_update->bindValue(":image_name", $image_name);
             $statement_players_table_update->bindValue(":image_thumbnail", $image_thumbnail_name);
             $statement_players_table_update->bindValue(":image_medium", $medium);
         }
         // IMAGE NOT CHANGED OR NOT OK
-        else if ( !isset($_FILES['player_image']) ||
-            $_FILES['error'] !== 0
-        ) {
+        // if ( !isset($_FILES['player_image']) || $_FILES['error'] !== 0 )
+        else {
             foreach ( $previous_image as $p_img ) {
                 $statement_players_table_update->bindValue(":image_name", $p_img['image_name']);
                 $statement_players_table_update->bindValue(":image_thumbnail", $p_img['image_thumbnail']);
@@ -325,12 +401,12 @@ if($_POST){
             }
         } 
         // IMAGE NOT OK
-        else {
-            header("Location: success.php?status=updated_image_invalid");
-            exit();
-        }
+        // else {
+        //     header("Location: success.php?status=updated_image_invalid");
+        //     exit();
+        // }
 
-        $statement_players_table_update->bindValue(":category_id", $category_id); 
+        $statement_players_table_update->bindValue(":category_id", $validated_player_role); 
 
         $statement_players_table_update->bindValue(":player_id", $player_id);
 
@@ -338,7 +414,7 @@ if($_POST){
 
         $db->commit();
 
-        header("Location: edit_player.php?player_id=$player_id");
+        header("Location: edit_player.php?player_id=$player_id&message=player_updated");
         exit();
     }
     catch ( PDOException $e ) {
@@ -347,25 +423,27 @@ if($_POST){
     }
     else {
         $player_name_error_message = validate_player_name($sanitized_player_name) === false ? "Player Name is invalid" : ""; 
-        // echo $player_name_error_message; 
 
         $player_age_error_message = validate_player_age($sanitized_player_age) === false ? "Player Age is invalid. Please enter between 1 - 100" : "";
-        // echo $player_age_error_message;
 
         $player_height_error_message = validate_player_height($sanitized_player_height) === false ? "Player Height is invalid. Please enter between 100.0 - 250.0" : "";
-        // echo $player_height_error_message;
 
         $player_weight_error_message = validate_player_weight($sanitized_player_weight) === false ? "Player Weight is invalid. Please enter between 40.0 - 170.0" : "";
-        // echo $player_weight_error_message;
 
         $player_profile_description_error_message = validate_player_profile_description($sanitized_player_profile_description) === false ? "Player Profile Description is invalid" : "";
-        // echo $player_profile_description_error_message;
+
+        $player_role_error_message = validate_player_role() === false ? "Please select player role" : "";
+
+        $image_error_message = $image_name === false ? "Please select valid image" : "" ;
 
         $error_checks = [$player_name_error_message, 
             $player_age_error_message, 
             $player_height_error_message, 
             $player_weight_error_message, 
-            $player_profile_description_error_message];
+            $player_profile_description_error_message,
+            $player_role_error_message,
+            $image_error_message
+        ];
 
         $errors = [];
 
@@ -376,47 +454,6 @@ if($_POST){
         }      
     }
 }
-// **********************************************************
-
-$page_player_id = $_GET['player_id'];
-
-// QUERY, PREPARE
-$player_page_query = "SELECT player_id, 
-                            player_name,
-                            player_age, 
-                            player_height, 
-                            player_weight, 
-                            player_profile_description, 
-                            image_name, 
-                            category_id
-                      FROM Players
-                      WHERE player_id = :player_id";
-
-$statement_player_page_query = $db->prepare($player_page_query);
-
-try {
-    $db->beginTransaction();
-
-// BIND, EXECUTE, FETCH
-    $statement_player_page_query->bindValue(":player_id", $page_player_id);
-    $statement_player_page_query->execute();
-
-    $rows = $statement_player_page_query->fetchAll(PDO::FETCH_ASSOC);
-
-    $db->commit();
-}
-catch ( PDOException $e ) {
-    echo "Error in showing values: " . $e->getMessage();
-}
-
-$player_categories_table_select = "SELECT category_id, category_name 
-    FROM Player_Categories";
-
-$statement_player_categories_table_select = $db->prepare($player_categories_table_select);
-
-$statement_player_categories_table_select->execute();
-
-$category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -428,7 +465,18 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <?php if (in_array(false, $checks) && $_POST): ?>
+
+
+
+
+    <?php if(isset($_GET['message']) && $_GET['message'] === "player_updated"): ?>
+        <p class="success">Player updated successfully</p>
+    <?php endif ?>
+
+
+
+
+    <?php if ($_POST && in_array(false, $checks) ): ?>
     <div id="error_container">
         <div id="errors">
             <h1>Player not updated</h1>
@@ -438,6 +486,10 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
         </div>
     </div>
     <?php endif ?>
+
+
+
+
 <div id="data_form_container">
         <h1>Update Player</h1>
         <?php foreach($rows as $player): ?>
@@ -451,27 +503,27 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                     <ul>
                         <li>
                             <label for="player_name">Player Name: </label>
-                            <input type="text" id="player_name" name="player_name" value="<?=$player['player_name']?>">
+                            <input type="text" id="player_name" name="player_name" value="<?=htmlspecialchars($player['player_name'])?>">
                             <span id="player_name_error" class="error_field">* Player name is required.</span>
                         </li>
                         <li>
                             <label for="player_age">Player Age: </label>
-                            <input type="number" id="player_age" name="player_age" value="<?=$player['player_age']?>">
+                            <input type="number" id="player_age" name="player_age" value="<?=htmlspecialchars($player['player_age'])?>">
                             <span id="player_age_error" class="error_field">* Valid player age is required.</span>
                         </li>
                         <li>
                             <label for="player_height">Player Height (cm): </label>
-                            <input type="number" id="player_height" name="player_height" step="any" min="100" max="250" value="<?=$player['player_height']?>">
+                            <input type="number" id="player_height" name="player_height" step="any" min="100" max="250" value="<?=htmlspecialchars($player['player_height'])?>">
                             <span id="player_height_error" class="error_field">* Player height is required.</span>
                         </li>
                         <li>
                             <label for="player_weight">Player Weight (kg): </label>
-                            <input type="number" id="player_weight" name="player_weight" step="any" min="40" max="170" value="<?=$player['player_weight']?>">
+                            <input type="number" id="player_weight" name="player_weight" step="any" min="40" max="170" value="<?=htmlspecialchars($player['player_weight'])?>">
                             <span id="player_weight_error" class="error_field">* Player weight is required.</span>
                         </li>
                         <li>
                             <label for="player_profile_description">Player Description: </label>
-                            <input id="player_profile_description" name="player_profile_description" value="<?=$player['player_profile_description']?>">
+                            <input id="player_profile_description" name="player_profile_description" value="<?=htmlspecialchars($player['player_profile_description'])?>">
                             <span id="player_profile_description_error" class="error_field">* Player's profile description is required.</span>
                         </li>
                         <li>
@@ -498,7 +550,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                             <input type="file" name="player_image" id="player_image" onchange="show_preview(this)">
                         </li>
                         <p id="remove_image_link">
-                            <a href="delete.php?player_id=<?=$page_player_id?>&action=remove_image" onClick="return confirm('Do you want to remove image?');">&times; Remove Image</a>
+                            <a href="delete.php?player_id=<?=$player_id?>&action=remove_image" onClick="return confirm('Do you want to remove image?');">&times; Remove Image</a>
                         </p>
                     </ul>
                 </fieldset>
@@ -508,7 +560,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
         <?php endforeach ?>
     </div>
     <div id="delete_player_link">
-        <a href="delete.php?player_id=<?=$page_player_id?>" onClick="return confirm('Are you sure you want to delete the Player?');">Delete Player</a>
+        <a href="delete.php?player_id=<?=$player_id?>" onClick="return confirm('Are you sure you want to delete the Player?');">Delete Player</a>
     </div>
     <script src="data_form_validate.js"></script>
 </body>

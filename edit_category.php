@@ -58,10 +58,10 @@ function sanitize_string($key)
 
 function valid_category_name($input)
 {
-    if ( trim($input) === "" ) {
-        return false;
+    if ( trim($input) !== "" && preg_match('/^[a-zA-Z ]+$/', trim($input)) ) {
+        return $input;
     }
-    return $input;
+    return false;
 }
 
 $sanitized_category_name = sanitize_string('updated_category');

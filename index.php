@@ -2,6 +2,8 @@
 
 require "mutual_content.php";
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -18,10 +20,6 @@ require "mutual_content.php";
 <body>
     <main>
         <h1>Football Players</h1>
-        <form id="search_form">
-            <input type="text">
-            <button type="button">Search</button>
-        </form>
         <div id="website_information_div">
             <div>
                 <h2>All football players, in one place</h2>

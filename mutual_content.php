@@ -6,6 +6,7 @@ $logged_in = isset($_SESSION['logged_in']) &&
 
 $is_admin = $_SESSION['is_admin'] === true;
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,27 +17,61 @@ $is_admin = $_SESSION['is_admin'] === true;
 </head>
 <body>
     <header id="header">
+
+
         <div id="logo_div">
             <img src="images/good_guides_logo.jpeg" alt="Good Guides logo image" width="100" height="50">
         </div>
-        <div id="header_links">
-            <a href='index.php'>Homepage</a>
-            <a href="log_in.php?for=add">Add Player</a>
-            <a href="players.php">See Players</a>
-            <?php if($logged_in): ?>
-                <a href="add_role.php">Manage Categories</a>
-                <?php if($is_admin): ?>
-                    <a href="manage_users_area.php">Manage Users</a>
+
+
+
+
+        <div id="page_top_right_container">
+
+
+            <div id="header_links">
+                <a href='index.php'>Homepage</a>
+                <a href="log_in.php?for=add">Add Player</a>
+                <a href="players.php">See Players</a>
+                <?php if($logged_in): ?>
+                    <a href="add_role.php">Manage Categories</a>
+                    <?php if($is_admin): ?>
+                        <a href="manage_users_area.php">Manage Users</a>
+                    <?php endif ?>
+                        <a href="log_in.php?for=logout" onClick="return confirm('Are you sure you want to logout?');">Log Out</a>
+                <?php else: ?>
+                <a href="log_in.php?for=login">Log In</a>
                 <?php endif ?>
-                    <a href="log_in.php?for=logout" onClick="return confirm('Are you sure you want to logout?');">Log Out</a>
-            <?php else: ?>
-            <a href="log_in.php?for=login">Log In</a>
-            <?php endif ?>
+            </div>
+
+
         </div>
+
+
     </header>
+
+
+
+
     <?php if(isset($_GET['message']) && $_GET['message'] === 'success'):?>
     <?= "<h1>WELCOME, You are now logged in!</h1>" ?>
     <?php endif ?>
+
+<main>
+    <div id="search_form_container">
+        <form id="search_form" action="search_result.php" method="get">
+            <input type="text" id="page_top_search_input" name="page_top_search_input" value="<?=htmlspecialchars($_POST['page_top_search_input'])?>">
+            <button type="submit">Search</button>
+            <label for="search_by_category">By category: </label>
+            <select id="search_by_category">
+                <option>All</option>
+                <option></option>
+            </select>
+        </form>
+    </div>    
+</main>
+
+
     <footer>
 
     </footer>
