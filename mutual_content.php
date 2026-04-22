@@ -6,6 +6,17 @@ $logged_in = isset($_SESSION['logged_in']) &&
 
 $is_admin = $_SESSION['is_admin'] === true;
 
+require "connect.php";
+
+// SELECT FOR DROPDOWN OPTIONS AND VALUES
+$player_categories_table_select = "SELECT category_id, category_name FROM Player_Categories";
+
+$statement_player_categories_table_select = $db->prepare($player_categories_table_select);
+
+$statement_player_categories_table_select->execute();
+
+$category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 <!DOCTYPE html>
@@ -63,9 +74,11 @@ $is_admin = $_SESSION['is_admin'] === true;
             <input type="text" id="page_top_search_input" name="page_top_search_input" value="<?=htmlspecialchars($_POST['page_top_search_input'])?>">
             <button type="submit">Search</button>
             <label for="search_by_category">By category: </label>
-            <select id="search_by_category">
-                <option>All</option>
-                <option></option>
+            <select id="search_by_category" name="select_input">
+                <option value="">All</option>
+                <?php foreach($category_rows as $category): ?>
+                    <option value="<?=$category['category_id']?>"><?=$category['category_name']?></option>
+                <?php endforeach ?>
             </select>
         </form>
     </div>    

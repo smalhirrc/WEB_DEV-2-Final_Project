@@ -25,20 +25,41 @@ require 'connect.php';
 
 $search_item = strtolower("%" . $validated_search_input . "%");
 
-$search_query = "SELECT player_id, player_name, player_height, player_weight, player_age, player_profile_description
+if ( isset($_GET['select_input']) && 
+    !empty($_GET['select_input'])
+) {
+    $select_input = filter_input(INPUT_GET, 'select_input', FILTER_VALIDATE_INT);
+
+    $search_query = "SELECT player_id, player_name, player_height, player_weight, player_age, player_profile_description, category_id
+        FROM Players
+        WHERE LOWER(player_name) LIKE :search_input OR 
+            LOWER(player_age) LIKE :search_input OR
+            LOWER(player_height) LIKE :search_input OR
+            LOWER(player_weight) LIKE :search_input OR
+            LOWER(player_profile_description) LIKE :search_input AND
+            category_id = :select_input";
+}
+else {
+    $search_query = "SELECT player_id, player_name, player_height, player_weight, player_age, player_profile_description, category_id
     FROM Players
     WHERE LOWER(player_name) LIKE :search_input OR 
         LOWER(player_age) LIKE :search_input OR
         LOWER(player_height) LIKE :search_input OR
         LOWER(player_weight) LIKE :search_input OR
         LOWER(player_profile_description) LIKE :search_input";
+}
 
 $statement_search_query = $db->prepare($search_query);
 
 if($validated_search_input !== false){
     try{
-        $statement_search_query->bindValue("search_input", $search_item);
+        $statement_search_query->bindValue(":search_input", $search_item);
 
+        if ( isset($_GET['select_input']) && 
+            !empty($_GET['select_input'])
+        ) {
+            $statement_search_query->bindValue(":select_input", $select_input);
+        }
         $statement_search_query->execute();
 
         $search_match_rows = $statement_search_query->fetchAll(PDO::FETCH_ASSOC);
@@ -64,17 +85,16 @@ if($validated_search_input !== false){
 <body>
 
 
-    <?php if(isset($_GET['page_top_search_input'])): ?>
-        <h1>Results for: "<?=$validated_search_input?>"</h1>
-<?php foreach($search_match_rows as $row): ?>
+<?php if(isset($_GET['page_top_search_input'])): ?>
+    <h1>Results for: "<?=$validated_search_input?>"</h1>
+    <?php foreach($search_match_rows as $row): ?>
         <div id="search_match_link_container">
             <p>
-                <!-- Title -->
                 <a href="player_page.php?player_id=<?=$row['player_id']?>&page_top_search_input=<?=$validated_search_input?>"><?=$row['player_name']?></a>
             </p>
         </div>
-<?php endforeach ?>
-    <?php endif ?> 
+    <?php endforeach ?>
+<?php endif ?> 
     
     
 </body>
