@@ -8,7 +8,7 @@ require "mutual_content.php";
 $page_player_id = filter_input(INPUT_GET, 'player_id', FILTER_VALIDATE_INT);
 
 // QUERY, PREPARE, BIND, EXECUTE, FETCH
-$player_page_query = "SELECT player_name, player_age, player_height, player_weight, image_medium 
+$player_page_query = "SELECT player_name, player_age, player_height, player_weight, image_medium, player_profile_description 
     FROM Players
     WHERE player_id = :player_id";
 
@@ -68,10 +68,11 @@ $validated_data_sanitized = validate_search_input($data_sanitized);
             </div>
             <div id="player_info">
                 <p>
-                    <?= htmlspecialchars($player['player_name']) .
-                    " is " . htmlspecialchars($player['player_age']) . " years old, " .
+                    <?= htmlspecialchars($player['player_name']) . " is " . 
+                    htmlspecialchars($player['player_age']) . " years old, " .
                     htmlspecialchars($player['player_height']) . " cm tall, and weighs " .
-                    htmlspecialchars($player['player_weight']) . " kg."; ?>
+                    htmlspecialchars($player['player_weight']) . " kg. " .
+                    "Profile: " . htmlspecialchars($player['player_profile_description']); ?>
                 </p>
             </div>
         </div>

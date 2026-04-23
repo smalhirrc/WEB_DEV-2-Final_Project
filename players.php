@@ -68,7 +68,7 @@ catch ( PDOException $e ) {
                         <?php endif ?>
                     </div>
                     <p>
-                        <a href="player_page.php?player_id=<?=$player['player_id']?>"><?=$player['player_name']?></a>
+                        <a href="player_page.php?player_id=<?=$player['player_id']?>"><?=htmlspecialchars($player['player_name'])?></a>
                     </p>
                 </div>
             <?php endforeach ?>

@@ -62,8 +62,8 @@ $checks = [$validated_user_name, $user_password, $user_role];
 if ( $_POST ) {
     if ( !in_array(false, $checks) ) {
         try {
-            $statement_update_user_query->bindValue(":user_name", $user_name);
-            $statement_update_user_query->bindValue(":user_password", $user_password);
+            $statement_update_user_query->bindValue(":user_name", $validated_user_name);
+            $statement_update_user_query->bindValue(":user_password", password_hash($user_password, PASSWORD_DEFAULT));
             $statement_update_user_query->bindValue(":user_role", $user_role);
             $statement_update_user_query->bindValue(":user_id", $user_id);
 

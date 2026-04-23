@@ -112,7 +112,7 @@ if( $_POST ) {
 <body>
     <div>
         <div>
-            <p>Category Current Name: "<?= $category_row['category_name'] ?>"</p>
+            <p>Category Current Name: "<?= htmlspecialchars($category_row['category_name']) ?>"</p>
             <p>
                 <form action="edit_category.php?category_id=<?=$category_id?>" method="post">
                     <label for="updated_category">Change to:</label>

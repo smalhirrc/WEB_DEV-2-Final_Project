@@ -12,7 +12,7 @@ if ( !isset($_SESSION['logged_in']) ||
 require('connect.php');
 require('mutual_content.php');
 
-$user_id = $_GET['user_id'];
+$user_id = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT);
 
 // QUERY, PREPARE, BIND, EXECUTE - TO DELETE USER.
 $delete_user_query = "DELETE FROM Admins 

@@ -12,7 +12,7 @@
     font-family: "Roboto", sans-serif;
 }
 
- /* HEADER */
+ /****************************************************** HEADER */
 #header{
    display: flex;
    justify-content: space-between;
@@ -61,7 +61,7 @@
    /* border: 1px solid; */
 }
 
-/* SEARCH RESULTS */
+/************************************************* SEARCH RESULTS */
 /* Container for each result */
 #search_match_link_container p {
     margin: 12px 0;
@@ -131,7 +131,61 @@ main h1{
     background-color: #0056b3;
 }
 
-/* HOMEPAGE WEBSITE INFO */
+#pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+    padding: 10px 0;
+}
+
+#pagination a {
+    text-decoration: none;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+#pagination a:hover {
+    background: linear-gradient(135deg, #357abd, #2c5fa3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+
+.next{
+   display: none;
+}
+
+.back{
+   display: none;
+}
+
+#result_count_container p{
+   display: flex;
+   justify-content: center;
+}
+
+#result_page_links_list{
+   list-style: none;
+   display: flex;
+   justify-content: center;
+   gap: 30px;
+}
+
+.active_page{
+   /* text-decoration: none; */
+   font-size: 1.2em;
+   cursor: pointer;
+   background-color: #000000;
+   color: #fff;
+   padding: 10px;
+}
+/******************************************** HOMEPAGE WEBSITE INFO */
 #website_information_div {
     display: flex;
     align-items: center;
@@ -168,7 +222,7 @@ main h1{
    object-fit: cover;
 }
 
-/* USERS TABLE ON 'MANAGE USERS AREA' PAGE */
+/************************************ USERS TABLE ON 'MANAGE USERS AREA' PAGE */
 .users_table{
    width: 100%;
    border-collapse: collapse;
@@ -222,7 +276,7 @@ main h1{
    white-space: nowrap;
 } */
 
-/* CATEGORIES TABLE ON 'MANAGE USERS AREA' PAGE */
+/********************************* CATEGORIES TABLE ON 'MANAGE CATEGORIES' PAGE */
 .categories_table{ 
    width: 80%;
    border-collapse: collapse;
@@ -269,13 +323,13 @@ main h1{
    border-bottom: none;
 }
 
-/* LOGIN PAGE - LOGIN FORM */
-.login_container{
+/********************************************** LOGIN PAGE, SIGNIN PAGE - FORMS */
+.login_container, .sign_in_form_container{
    width: 100%;
    max-width: 400px;
 }
 
-.login_form{
+.login_form, .sign_in_form{
    background-color: #ffffff;
    padding: 30px;
 
@@ -287,17 +341,17 @@ main h1{
    gap: 15px;
 }
 
-.login_form h2{
+.login_form h2, .sign_form h2{
    font-size: 24px;
    color: #444;
 }
 
-.login_form input:focus{
+.login_form input:focus, .sign_in_form input:focus{
    outline: none;
    border-color: #007Bff;
 }
 
-.login_form button{
+.login_form button, .sign_in_form button{
    margin-top: 10px;
 
    padding: 10px;
@@ -314,15 +368,15 @@ main h1{
    transition: background 0.2s ease;
 }
 
-.login_form button:hover{
+.login_form button:hover, .sign_in_form button:hover{
    background-color: #0056b3;
 }
 
-.login_form button:active{
+.login_form button:active, .sign_in_form button:active{
    transform: scale(0.98);
 }
 
-/* ALL PLAYERS LIST PAGE */
+/************************************************* ALL PLAYERS LIST PAGE */
 aside#players_page_aside{
    position: fixed;
    left: 0;
@@ -443,7 +497,7 @@ a.active{
    color: #007bff;
 }
 
-/* SPECIFIC PLAYER PAGE */
+/***************************************** SPECIFIC PLAYER PAGE */
 #player_profile{
    max-width: 900px;
    margin: 40px auto;
@@ -527,7 +581,7 @@ a.active{
    background: #0056b3;
 }
 
-/* EDIT PLAYER PAGE */
+/********************************************** EDIT PLAYER PAGE */
 #delete_player_link a{
    display: inline-block;
 
@@ -547,7 +601,7 @@ a.active{
    background: #6a0505;
 }
 
-/* ADD and EDIT PLAYER FORM */
+/****************************************** ADD and EDIT PLAYER FORM */
 .error_field{
     font-size: 12px;
     color: #d93025;
@@ -686,7 +740,7 @@ legend{
     margin-top: 10px;
 }
 
-/* CURRENT IMAGE DISPLAY ON EDIT PLAYER PAGE */
+/************************************** CURRENT IMAGE DISPLAY ON EDIT PLAYER PAGE */
 p.current_image_preview{
    width: 180px;
    height: 180px;

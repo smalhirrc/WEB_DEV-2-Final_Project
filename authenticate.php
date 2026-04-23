@@ -49,7 +49,7 @@ $admin = $statement_admin_query->fetch(PDO::FETCH_ASSOC);
 // If user exists and password matches
 if ( 
     $admin && 
-    $admin['passwords'] === $validated_password
+    password_verify($validated_password, $admin['passwords'])
 ) {
     session_start();
 

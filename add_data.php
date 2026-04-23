@@ -394,7 +394,7 @@ foreach($error_checks as $check){
 
 
 
-    <?php if (count($errors) !== 0 && $_POST): ?>
+    <?php if (count($errors) !== 0 && $_SERVER['REQUEST_METHOD'] === 'POST'): ?>
     <div id="error_container">
         <div id="errors">
             <?php foreach($errors as $error_messages): ?>

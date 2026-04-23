@@ -13,7 +13,29 @@ if (
 require('connect.php');
 require('mutual_content.php');
 
+if ( isset($_GET['message']) && 
+     $_GET['message'] === 'signinsuccess'
+) {
+    $get_user_name = filter_input(INPUT_GET, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
 
+    function validate_user_name($input){
+        if(!empty($input) && preg_match('/^[a-zA-Z ]+$/', trim($input))){
+            return $input;
+        }
+        return false;
+    }
+
+    $valid_user_name = validate_user_name($get_user_name);
+
+    if($valid_user_name !== false){
+        echo "<h1>Sign In successfully</h1>";
+        echo "<p>User can login with username: <b>" . htmlspecialchars($valid_user_name) ."</b></p>";
+    }
+    else{
+        echo "<h1>invalid_user_name</h1>";
+        echo "<p>Invalid username</p>";
+    }
+}
 
 
 $user_name = $_POST['user_name'] ? $_POST['user_name'] : "";
@@ -38,12 +60,12 @@ $checks = [$user_password, $user_role, $validated_user_name];
 if ( $_POST ) {
     if ( !in_array(false, $checks) ) {
         try {
-            $statement_add_user_query->bindValue(":user_name", $user_name);
-            $statement_add_user_query->bindValue(":user_password", $user_password);
+            $statement_add_user_query->bindValue(":user_name", $validated_user_name);
+            $statement_add_user_query->bindValue(":user_password", password_hash($user_password, PASSWORD_DEFAULT));
             $statement_add_user_query->bindValue(":user_role", $user_role);
 
             if( $statement_add_user_query->execute() ) {
-                header("Location: add_user.php");
+                header("Location: add_user.php?message=signinsuccess&username=$validated_user_name");
                 exit();
             }         
         }

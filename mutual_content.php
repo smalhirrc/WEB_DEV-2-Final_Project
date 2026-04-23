@@ -25,6 +25,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <title></title>
 </head>
 <body>
     <header id="header">
@@ -53,6 +54,9 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
                 <?php else: ?>
                 <a href="log_in.php?for=login">Log In</a>
                 <?php endif ?>
+                <?php if(!$logged_in): ?>
+                    <a href="sign_in.php">Sign In</a>
+                <?php endif ?>
             </div>
 
 
@@ -71,13 +75,13 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
 <main>
     <div id="search_form_container">
         <form id="search_form" action="search_result.php" method="get">
-            <input type="text" id="page_top_search_input" name="page_top_search_input" value="<?=htmlspecialchars($_POST['page_top_search_input'])?>">
+            <input type="text" id="page_top_search_input" name="page_top_search_input" value="<?=htmlspecialchars($_GET['page_top_search_input'])?>">
             <button type="submit">Search</button>
             <label for="search_by_category">By category: </label>
             <select id="search_by_category" name="select_input">
                 <option value="">All</option>
                 <?php foreach($category_rows as $category): ?>
-                    <option value="<?=$category['category_id']?>"><?=$category['category_name']?></option>
+                    <option value="<?=$category['category_id']?>" <?= (isset($_GET['select_input']) && $_GET['select_input'] == $category['category_id']) ? "selected" : ""; ?>><?=$category['category_name']?></option>
                 <?php endforeach ?>
             </select>
         </form>

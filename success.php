@@ -2,6 +2,7 @@
 
 require "mutual_content.php";
 
+
 if ( isset($_GET['status']) && 
      $_GET['status'] === 'added'
 ) {

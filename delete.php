@@ -2,7 +2,7 @@
 
 require "connect.php";
 
-$page_player_id = $_GET['player_id'];
+$page_player_id = filter_input(INPUT_GET, 'player_id', FILTER_VALIDATE_INT);
 
 // QUERY, PREPARE - TO DELETE PLAYER
 $delete_player_query = "DELETE FROM Players 

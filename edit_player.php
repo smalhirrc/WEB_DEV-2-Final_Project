@@ -374,7 +374,7 @@ $checks = [validate_player_name($sanitized_player_name),
 
 
 
-if($_POST){
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(!in_array(false, $checks)  && (isset($image_name) && $image_name !== false) ){
     try {
         $db->beginTransaction();

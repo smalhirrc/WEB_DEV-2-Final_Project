@@ -61,7 +61,7 @@ $statement_player_role_query = $db->prepare($player_role_query);
 
 
 
-if ( $_POST ) {
+if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     if( $validated_player_role !== false ) {
         $statement_player_role_query->bindValue(":player_role", $validated_player_role);
 
