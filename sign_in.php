@@ -1,7 +1,8 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require "mutual_content.php";
-require "connect.php";
+// require "connect.php";
 
 // SANITIZE AND VALIDATE EMAIL
 $email = isset($_POST['email']) ? $_POST['email'] : "";
@@ -62,6 +63,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && validate_password($password, $confir
 
 }
 else{
+
     $email_error_message = empty($validated_email_address) ? "* Invalid email" : "";
 
     $password_error_message = empty($password) ? "* Please enter password" : "";
@@ -106,7 +108,7 @@ else{
             <form class="sign_in_form" action="" method="post">
                 <h2>Sign In</h2>
                 <label>Email address:</label>
-                <input type="email" id="email" name="email" value="<?=htmlspecialchars($_POST['email'])?>">
+                <input type="email" id="email" name="email" value="<?=$email?>">
                 <span class="error_field" id="email_error">* Please enter valid email</span>
 
                 <label>Password:</label>

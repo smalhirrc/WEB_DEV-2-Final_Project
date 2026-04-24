@@ -4,7 +4,9 @@ session_start();
 $logged_in = isset($_SESSION['logged_in']) && 
     $_SESSION['logged_in'] === true;
 
-$is_admin = $_SESSION['is_admin'] === true;
+$is_admin = isset($_SESSION['is_admin']) ? $_SESSION['is_admin'] === true : "";
+
+$get_value = isset($_GET['page_top_search_input']) ? $_GET['page_top_search_input'] : "";
 
 require "connect.php";
 
@@ -75,7 +77,7 @@ $category_rows = $statement_player_categories_table_select->fetchAll(PDO::FETCH_
 <main>
     <div id="search_form_container">
         <form id="search_form" action="search_result.php" method="get">
-            <input type="text" id="page_top_search_input" name="page_top_search_input" value="<?=htmlspecialchars($_GET['page_top_search_input'])?>">
+            <input type="text" id="page_top_search_input" name="page_top_search_input" value="<?=$get_value?>">
             <button type="submit">Search</button>
             <label for="search_by_category">By category: </label>
             <select id="search_by_category" name="select_input">

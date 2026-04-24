@@ -6,9 +6,9 @@ if ( isset($_GET['message']) &&
      $_GET['message'] === 'signin_success'
 ) {
     $user_name = filter_input(INPUT_GET, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
-
+//&& preg_match('/^[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?$/', $input)
     function validate_user_name($input){
-        if(!empty($input) && preg_match('/^[a-zA-Z]+$/', $input)){
+        if(!empty($input)){
             return $input;
         }
         return false;
